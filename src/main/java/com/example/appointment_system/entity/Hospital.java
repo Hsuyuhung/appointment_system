@@ -23,15 +23,34 @@ public class Hospital {
 
 	@Column(name = "district")
 	private String district;
-	
+
 	@Column(name = "address")
 	private String address;
 
 	@Column(name = "department")
 	private String department;
-	
+
 	public Hospital() {
-		
+
+	}
+
+	public Hospital(String hospitalId, String hospitalName, String phone, String city, String district, String address,
+			String department) {
+		this.hospitalId = hospitalId;
+		this.hospitalName = hospitalName;
+		this.phone = phone;
+		this.city = city;
+		this.district = district;
+		this.address = address;
+		this.city = city;
+		this.district = district;
+		this.address = address;
+		this.department = department;
+	}
+	
+	public Hospital(String hospitalId, String department) {
+		this.hospitalId = hospitalId;
+		this.department = department;
 	}
 
 	public String getHospitalId() {
@@ -90,5 +109,4 @@ public class Hospital {
 		this.department = department;
 	}
 
-	
 }

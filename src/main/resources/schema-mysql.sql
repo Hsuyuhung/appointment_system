@@ -1,5 +1,5 @@
 CREATE TABLE  IF NOT EXISTS `appointment_info` (
-  `id` int NOT NULL,
+  `id` varchar(45) NOT NULL,
   `hospital_id` varchar(45) NOT NULL,
   `doctor_id` varchar(45) NOT NULL,
   `appointment_time` varchar(45) NOT NULL,
@@ -9,10 +9,10 @@ CREATE TABLE  IF NOT EXISTS `appointment_info` (
   
    CREATE TABLE  IF NOT EXISTS `doctor_info` (
   `doctor_id` varchar(45) NOT NULL,
-  `doctor_name` varchar(45) DEFAULT NULL,
-  `doctor_department` varchar(45) DEFAULT NULL,
-  `hospital_id` varchar(45) DEFAULT NULL,
-  `appointment_time` varchar(45) DEFAULT NULL,
+  `doctor_name` varchar(45) NOT NULL,
+  `doctor_department` varchar(45) NOT NULL,
+  `hospital_id` varchar(45) NOT NULL,
+  `appointment_time` varchar(45) NOT NULL,
   PRIMARY KEY (`doctor_id`)
   );
   

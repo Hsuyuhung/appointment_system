@@ -3,15 +3,15 @@ package com.example.appointment_system.constants;
 public enum AppointmentSystemRtnCode {
 
 	SUCCESSFUL("200", "Success"), 
-	ISBN_EXISTED("400", "ISBN is existed!!"), 
-	ISBN_WRONG("400", "ISBN is wrong!!"),
-	ISBN_LENGTH("400", "ISBN length is wrong!!"), 
-    SBN_NULL("400", "ISBN is null!!"),
-	ITEM_EMPTY("400", "Item is empty!!"), 
-	SALE_INITIAL("400", "Initial sales volume must be 0!!"),
-	NUMBER_ERRO("400", "Must not be less than 0!!"), 
-	NO_RESULT("400", "No result!!"),
-	NO_STOCK("400", "Inventory shortage!!");
+	HOSPITAL_ID_EXSITED("400", "醫院代碼已存在。"), 
+	HOSPITAL_ID_WRONG("400", "醫院代碼格式錯誤。"),
+	HOSPITAL_ID_EMPTY("400", "醫院代碼不得為空。"), 
+	HOSPITAL_NAME_EMPTY("400", "醫院名稱不得為空。"),
+	HOSPITAL_PHONE_EMPTY("400", "醫院電話不得為空。"), 
+	HOSPITAL_CITY_EMPTY("400", "醫院城市不得為空。"),
+	HOSPITAL_DISTRICT_EMPTY("400", "醫院地區不得為空。"), 
+	HOSPITAL_ADDRESS_EMPTY("400", "醫院地址不得為空。"),
+	HOSPITAL_DEPARTMENT_EMPTY("400", "醫院診別不得為空。");
 
 	private String code;
 	private String message;
