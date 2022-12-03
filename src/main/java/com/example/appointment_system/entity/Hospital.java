@@ -3,14 +3,21 @@ package com.example.appointment_system.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "hospital_info")
+@IdClass(HospitalId.class)
 public class Hospital {
+	
 	@Id
 	@Column(name = "hospital_id")
 	private String hospitalId;
+
+	@Id
+	@Column(name = "department")
+	private String department;
 
 	@Column(name = "hospital_name")
 	private String hospitalName;
@@ -27,30 +34,19 @@ public class Hospital {
 	@Column(name = "address")
 	private String address;
 
-	@Column(name = "department")
-	private String department;
-
 	public Hospital() {
 
 	}
 
-	public Hospital(String hospitalId, String hospitalName, String phone, String city, String district, String address,
-			String department) {
+	public Hospital(String hospitalId, String department, String hospitalName, String phone, String city, String district, String address
+			) {
 		this.hospitalId = hospitalId;
+		this.department = department;
 		this.hospitalName = hospitalName;
 		this.phone = phone;
 		this.city = city;
 		this.district = district;
 		this.address = address;
-		this.city = city;
-		this.district = district;
-		this.address = address;
-		this.department = department;
-	}
-	
-	public Hospital(String hospitalId, String department) {
-		this.hospitalId = hospitalId;
-		this.department = department;
 	}
 
 	public String getHospitalId() {
@@ -59,6 +55,14 @@ public class Hospital {
 
 	public void setHospitalId(String hospitalId) {
 		this.hospitalId = hospitalId;
+	}
+	
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
 	}
 
 	public String getHospitalName() {
@@ -100,13 +104,4 @@ public class Hospital {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
-	public String getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(String department) {
-		this.department = department;
-	}
-
 }

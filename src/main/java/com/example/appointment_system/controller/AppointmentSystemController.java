@@ -24,6 +24,10 @@ public class AppointmentSystemController {
 		if (!StringUtils.hasText(req.getHospitalId())) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITAL_ID_EMPTY.getMessage());
 		}
+		
+		if (!StringUtils.hasText(req.getDepartment())) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITAL_DEPARTMENT_EMPTY.getMessage());
+		}
 
 		if (!StringUtils.hasText(req.getHospitalName())) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITAL_NAME_EMPTY.getMessage());
@@ -43,21 +47,40 @@ public class AppointmentSystemController {
 
 		if (!StringUtils.hasText(req.getAddress())) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITAL_ADDRESS_EMPTY.getMessage());
+		}	
+		
+		if(!req.getHospitalId().matches("[A-Z]\\d{3}")) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITAL_ID_WRONG.getMessage());
+		}
+		
+		if(!req.getPhone().matches("\\d{2}-\\d{3}-\\d{4}|\\d{2}-\\d{4}-\\d{4}")) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITAL_PHONE_WRONG.getMessage());
 		}
 
-		if (!StringUtils.hasText(req.getDepartment())) {
-			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITAL_DEPARTMENT_EMPTY.getMessage());
-		}
-
-//		醫院代碼的"^[A-Z]+$""^[0-9]+(.[0-9]{3})?$" 電話的"^(\(\d{3,4}-)|\d{3.4}-)?\d{7,8}$"
-
-		Hospital hospital = appointmentSystemService.createHospitalInfo(req.getHospitalId(), req.getHospitalName(),
-				req.getPhone(), req.getCity(), req.getDistrict(), req.getAddress(), req.getDepartment());
+		Hospital hospital = appointmentSystemService.createHospitalInfo(req.getHospitalId(), req.getDepartment(), req.getHospitalName(),
+				req.getPhone(), req.getCity(), req.getDistrict(), req.getAddress());
 		if (hospital == null) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITAL_ID_EXSITED.getMessage());
 		}
-		return new AppointmentSystemRes(AppointmentSystemRtnCode.SUCCESSFUL.getMessage(), hospital);
-
+		return new AppointmentSystemRes(AppointmentSystemRtnCode.CREATE_SUCCESSFUL.getMessage(), hospital);
+	}
+	
+	@PostMapping(value = "api/update_hospital_info")
+	public AppointmentSystemRes updateHospitalInfo(@RequestBody AppointmentSystemReq req) {
+		
+		return appointmentSystemService.updateHospitalInfo(req.getHospitalId(), req.getHospitalName(), req.getPhone(), req.getCity(), req.getDistrict(), req.getAddress());
+	}
+	
+	@PostMapping(value = "api/delete_hospital_info")
+	public AppointmentSystemRes deleteHospitalInfo(@RequestBody AppointmentSystemReq req) {
+		
+		return appointmentSystemService.deleteHospitalInfo(req.getHospitalId());
+	}
+	
+	@PostMapping(value = "api/delete_hospital_department")
+	public AppointmentSystemRes deleteHospitalDepartment(@RequestBody AppointmentSystemReq req) {
+		
+		return appointmentSystemService.deleteHospitalDepartment(req.getHospitalId(), req.getDepartment());
 	}
 
 }

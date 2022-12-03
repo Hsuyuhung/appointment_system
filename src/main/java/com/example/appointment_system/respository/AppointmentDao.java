@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.example.appointment_system.entity.Appointment;
 
 @Repository
-public interface AppointmentDao extends JpaRepository<Appointment, Integer> {
+public interface AppointmentDao extends JpaRepository<Appointment, String> {
 
 }

@@ -1,35 +1,39 @@
 package com.example.appointment_system.entity;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "appointment_info")
 public class Appointment {
-	
+
 	@Id
 	@Column(name = "id")
-	int id;
-	
+	String id;
+
 	@Column(name = "hospital_id")
 	String hospitalId;
-	
+
 	@Column(name = "doctor_id")
 	String doctorId;
-	
+
 	@Column(name = "appintment_time")
 	String appintmentTime;
-	
+
 	@Column(name = "regiter")
 	String regiter;
-	
+
 	public Appointment() {
-		
+
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -64,7 +68,5 @@ public class Appointment {
 	public void setRegiter(String regiter) {
 		this.regiter = regiter;
 	}
-	
-	
-	
+
 }

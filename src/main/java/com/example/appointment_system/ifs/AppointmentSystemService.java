@@ -5,11 +5,13 @@ import com.example.appointment_system.vo.AppointmentSystemRes;
 
 public interface AppointmentSystemService {
 
-	public Hospital createHospitalInfo(String hospitalId, String hospitalName, String phone, String city,
-			String district, String address, String department);
+	public Hospital createHospitalInfo(String hospitalId, String department, String hospitalName, String phone,
+			String city, String district, String address);
 
-	public AppointmentSystemRes updateHospitalInfo(String hospitalId, String hospitalName, String phone, String city, String district, String address,
-			String department);
+	public AppointmentSystemRes updateHospitalInfo(String hospitalId, String hospitalName, String phone, String city,
+			String district, String address);
+	
+	public AppointmentSystemRes deleteHospitalInfo(String hospitalId);
 
-	public Hospital deleteHospitalInfo(String hospitalId, String department);
+	public AppointmentSystemRes deleteHospitalDepartment(String hospitalId, String department);
 }

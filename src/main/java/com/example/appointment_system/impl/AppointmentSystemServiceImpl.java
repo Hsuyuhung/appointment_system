@@ -1,5 +1,6 @@
 package com.example.appointment_system.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +9,9 @@ import org.springframework.util.StringUtils;
 
 import com.example.appointment_system.constants.AppointmentSystemRtnCode;
 import com.example.appointment_system.entity.Hospital;
+import com.example.appointment_system.entity.HospitalId;
 import com.example.appointment_system.ifs.AppointmentSystemService;
-//import com.example.appointment_system.respository.AppointmentDao;
-//import com.example.appointment_system.respository.DoctorDao;
 import com.example.appointment_system.respository.HospitalDao;
-//import com.example.appointment_system.respository.PatientDao;
 import com.example.appointment_system.vo.AppointmentSystemRes;
 
 @Service
@@ -31,74 +30,80 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 //	private PatientDao patientDao;
 
 	@Override
-	public Hospital createHospitalInfo(String hospitalId, String hospitalName, String phone, String city,
-			String district, String address, String department) {
+	public Hospital createHospitalInfo(String hospitalId, String department, String hospitalName, String phone,
+			String city, String district, String address) {
 
-		if (hospitalDao.existsById(hospitalId)) {
+		HospitalId hospitalPk = new HospitalId(hospitalId, department);
+		Optional<Hospital> hospitalOp = hospitalDao.findById(hospitalPk);
+
+		if (hospitalOp.isPresent()) {
 			return null;
 		}
 
-		Hospital hospital = new Hospital(hospitalId, hospitalName, phone, city, district, address, department);
+		Hospital hospital = new Hospital(hospitalId, department, hospitalName, phone, city, district, address);
 		return hospitalDao.save(hospital);
 	}
 
 	@Override
 	public AppointmentSystemRes updateHospitalInfo(String hospitalId, String hospitalName, String phone, String city,
-			String district, String address, String department) {
+			String district, String address) {
+		
 		AppointmentSystemRes appointmentSystemRes = new AppointmentSystemRes();
-		Optional<Hospital> hospitalOp = hospitalDao.findById(hospitalId);
-		Hospital hospital = hospitalOp.get();
 
-		if (!hospitalOp.isPresent()) {
+		List<Hospital> hospitalList = hospitalDao.findByHospitalId(hospitalId);
+
+		if (hospitalList == null) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITAL_ID_WRONG.getMessage());
 		}
 
-		setParams(hospital, hospitalName, phone, city, district, address, department);
-		hospitalDao.save(hospital);
-		appointmentSystemRes.setHospital(hospital);
-		appointmentSystemRes.setMessage(AppointmentSystemRtnCode.SUCCESSFUL.getMessage());
+		for (Hospital item : hospitalList) {
+
+			if (StringUtils.hasText(hospitalName)) {
+				item.setHospitalName(hospitalName);
+			}
+
+			if (StringUtils.hasText(phone)) {
+				item.setPhone(phone);
+			}
+
+			if (StringUtils.hasText(city)) {
+				item.setCity(city);
+			}
+
+			if (StringUtils.hasText(district)) {
+				item.setDistrict(district);
+			}
+
+			if (StringUtils.hasText(address)) {
+				item.setAddress(address);
+			}
+		}
+
+		hospitalDao.saveAll(hospitalList);
+		appointmentSystemRes.setMessage(AppointmentSystemRtnCode.UPDATE_SUCCESSFUL.getMessage());
+		appointmentSystemRes.setHospitalList(hospitalList);
 		return appointmentSystemRes;
 	}
 
-	private void setParams(Hospital hospital, String hospitalName, String phone, String city, String district,
-			String address, String department) {
 
-		if (StringUtils.hasText(hospitalName)) {
-			hospital.setHospitalName(hospitalName);
-		}
+	@Override
+	public AppointmentSystemRes deleteHospitalInfo(String hospitalId) {
+		hospitalDao.deleteByHospitalId(hospitalId);
 
-		if (StringUtils.hasText(phone)) {
-			hospital.setHospitalName(phone);
-		}
-
-		if (StringUtils.hasText(city)) {
-			hospital.setHospitalName(city);
-		}
-
-		if (StringUtils.hasText(district)) {
-			hospital.setHospitalName(district);
-		}
-
-		if (StringUtils.hasText(address)) {
-			hospital.setHospitalName(address);
-		}
-
-		if (StringUtils.hasText(department)) {
-			hospital.setHospitalName(department);
-		}
+		return new AppointmentSystemRes(AppointmentSystemRtnCode.DELETE_SUCCESSFUL.getMessage());
 	}
 
 	@Override
-	public Hospital deleteHospitalInfo(String hospitalId, String department) {
-		
-		if (hospitalDao.existsById(hospitalId)) {
-			return null;
+	public AppointmentSystemRes deleteHospitalDepartment(String hospitalId, String department) {
+
+		HospitalId hospitalPk = new HospitalId(hospitalId, department);
+		Optional<Hospital> hospitalOp = hospitalDao.findById(hospitalPk);
+
+		if (!hospitalOp.isPresent()) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITAL_DEPARTMENT_WRONG.getMessage());
 		}
-		
-		
-		Hospital hospital = new Hospital(hospitalId, department);
-//		return hospitalDao.delete(hospital);
-		return null;
+		hospitalDao.deleteById(hospitalPk);
+		return new AppointmentSystemRes(AppointmentSystemRtnCode.DELETE_SUCCESSFUL.getMessage());
 	}
 
 }
