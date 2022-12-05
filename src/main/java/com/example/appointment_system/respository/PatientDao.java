@@ -8,4 +8,5 @@ import com.example.appointment_system.entity.Patient;
 @Repository
 public interface PatientDao extends JpaRepository<Patient, String> {
 
+	
 }
