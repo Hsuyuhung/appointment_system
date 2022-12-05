@@ -1,5 +1,5 @@
 CREATE TABLE  IF NOT EXISTS `appointment_info` (
-  `id` int NOT NULL,
+  `id` varchar(45) NOT NULL,
   `hospital_id` varchar(45) NOT NULL,
   `doctor_id` varchar(45) NOT NULL,
   `appointment_time` varchar(45) NOT NULL,

@@ -1,8 +1,13 @@
 package com.example.appointment_system.entity;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
+
+@Entity
+@Table(name = "appointment")
 public class Appointment {
 	
 	@Id
