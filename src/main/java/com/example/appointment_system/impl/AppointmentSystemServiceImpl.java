@@ -31,8 +31,170 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 	private PatientDao patientDao;
 
 
+	//	æ–°å¢é†«é™¢è³‡è¨Š
+	@Override
+	public Hospital createHospitalInfo(String hospitalId, String department, String hospitalName, String phone,
+			String city, String district, String address) {
 
-	// «Ø¥ß¯f±w¸ê®Æ
+		HospitalId hospitalPk = new HospitalId(hospitalId, department);
+		Optional<Hospital> hospitalOp = hospitalDao.findById(hospitalPk);
+
+		if (hospitalOp.isPresent()) {
+			return null;
+		}
+
+		Hospital hospital = new Hospital(hospitalId, department, hospitalName, phone, city, district, address);
+		return hospitalDao.save(hospital);
+	}
+
+//	æ›´æ–°é†«é™¢è³‡è¨Š
+	@Override
+	public AppointmentSystemRes updateHospitalInfo(String hospitalId, String hospitalName, String phone, String city,
+			String district, String address) {
+
+		AppointmentSystemRes appointmentSystemRes = new AppointmentSystemRes();
+
+		List<Hospital> hospitalList = hospitalDao.findByHospitalId(hospitalId);
+
+		if (hospitalList == null) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITAL_ID_WRONG.getMessage());
+		}
+
+		for (Hospital item : hospitalList) {
+
+			if (StringUtils.hasText(hospitalName)) {
+				item.setHospitalName(hospitalName);
+			}
+
+			if (StringUtils.hasText(phone)) {
+				item.setPhone(phone);
+			}
+
+			if (StringUtils.hasText(city)) {
+				item.setCity(city);
+			}
+
+			if (StringUtils.hasText(district)) {
+				item.setDistrict(district);
+			}
+
+			if (StringUtils.hasText(address)) {
+				item.setAddress(address);
+			}
+		}
+
+		hospitalDao.saveAll(hospitalList);
+		appointmentSystemRes.setMessage(AppointmentSystemRtnCode.UPDATE_SUCCESSFUL.getMessage());
+		appointmentSystemRes.setHospitalList(hospitalList);
+		return appointmentSystemRes;
+	}
+
+//	åˆªé™¤é†«é™¢è³‡è¨Š
+	@Override
+	public AppointmentSystemRes deleteHospitalInfo(String hospitalId) {
+		if(hospitalDao.findByHospitalId(hospitalId) == null) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITAL_ID_WRONG.getMessage());
+		}
+		
+		hospitalDao.deleteByHospitalId(hospitalId);
+
+		return new AppointmentSystemRes(AppointmentSystemRtnCode.DELETE_SUCCESSFUL.getMessage());
+	}
+
+//	åˆªé™¤é†«é™¢ç§‘åˆ¥
+	@Override
+	public AppointmentSystemRes deleteHospitalDepartment(String hospitalId, String department) {
+
+		HospitalId hospitalPk = new HospitalId(hospitalId, department);
+		Optional<Hospital> hospitalOp = hospitalDao.findById(hospitalPk);
+
+		if (!hospitalOp.isPresent()) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITAL_DEPARTMENT_WRONG.getMessage());
+		}
+		hospitalDao.deleteById(hospitalPk);
+		return new AppointmentSystemRes(AppointmentSystemRtnCode.DELETE_SUCCESSFUL.getMessage());
+	}
+
+	// æ–°å¢é†«ç”Ÿè³‡è¨Š
+	@Override
+	public AppointmentSystemRes createDoctorInfo(String hospitalId, String doctorId, String doctorName,
+			String doctorDepartment, String appointmentTime) {
+		AppointmentSystemRes appointmentSystemRes = new AppointmentSystemRes();
+		String department = doctorDepartment;
+		HospitalId hospitalIdd = new HospitalId(hospitalId, department);
+		Optional<Hospital> hospitalIdOp = hospitalDao.findById(hospitalIdd);
+		if (!hospitalIdOp.isPresent()) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITALID_DEPARTMENT_INEXISTED.getMessage());
+		}
+
+		if (doctorDao.existsById(doctorId)) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORID_EXISTED.getMessage());
+		}
+
+		Doctor doctorInfo = new Doctor(hospitalId, doctorId, doctorName, doctorDepartment, appointmentTime);
+		doctorDao.save(doctorInfo);
+		appointmentSystemRes.setMessage(AppointmentSystemRtnCode.CREATE_SUCCESSFUL.getMessage());
+		appointmentSystemRes.setDoctor(doctorInfo);
+		return appointmentSystemRes;
+	}
+
+	// æ›´æ–°é†«ç”Ÿè³‡è¨Š
+	@Override
+	public AppointmentSystemRes updateDoctorInfo(String doctorId, String doctorName, String doctorDepartment,
+			String hospitalId, String appointmentTime) {
+		AppointmentSystemRes appointmentSystemRes = new AppointmentSystemRes();
+		Optional<Doctor> doctorOp = doctorDao.findById(doctorId);
+		if (doctorOp.isEmpty()) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORID_INEXISTED.getMessage());
+		}
+
+		Doctor doctor = doctorOp.get();
+
+		if (StringUtils.hasText(doctorName)) {
+			doctor.setDoctorName(doctorName);
+		}
+		if (StringUtils.hasText(doctorDepartment)) {
+			String department = doctorDepartment;
+			HospitalId hospitalIdd = new HospitalId(hospitalId, department);
+			Optional<Hospital> hospitalIdOp = hospitalDao.findById(hospitalIdd);
+			if (hospitalIdOp.isEmpty()) {
+				return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITALID_DEPARTMENT_INEXISTED.getMessage());
+			}
+			doctor.setDoctorDepartment(doctorDepartment);
+		}
+		if (StringUtils.hasText(hospitalId)) {
+			String department = doctorDepartment;
+			HospitalId hospitalIdd = new HospitalId(hospitalId, department);
+			Optional<Hospital> hospitalIdOp = hospitalDao.findById(hospitalIdd);
+			if (hospitalIdOp.isEmpty()) {
+				return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITALID_DEPARTMENT_INEXISTED.getMessage());
+			}
+			doctor.setHospitalId(hospitalId);
+		}
+		if (StringUtils.hasText(appointmentTime)) {
+			doctor.setAppointmentTime(appointmentTime);
+		}
+
+		doctorDao.save(doctor);
+		appointmentSystemRes.setMessage(AppointmentSystemRtnCode.UPDATE_SUCCESSFUL.getMessage());
+		appointmentSystemRes.setDoctor(doctor);
+		return appointmentSystemRes;
+	}
+
+	// åˆªé™¤é†«ç”Ÿè³‡è¨Š
+	@Override
+	public Doctor deleteDoctorInfo(String doctorId) {
+		Optional<Doctor> doctorOp = doctorDao.findById(doctorId);
+		if (doctorOp.isEmpty()) {
+			return null;
+		}
+		Doctor doctor = doctorOp.get();
+		doctorDao.deleteById(doctorId);
+
+		return doctor;
+	}
+
+	// å»ºç«‹ç—…æ‚£è³‡æ–™
 	@Override
 	public AppointmentSystemRes createPatientInfo(String id, String password, String name, String birthday,	String gender, String eMail) {
 
@@ -54,7 +216,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		return new AppointmentSystemRes(patient, AppointmentSystemRtnCode.SUCCESSFUL.getMessage());
 	}
 
-	// §ó§ï¯f±w¸ê°T---> ID .password §P§O.name eMail§ó§ï
+	// æ›´æ”¹ç—…æ‚£è³‡è¨Š---> ID .password åˆ¤åˆ¥.name eMailæ›´æ”¹
 	@Override
 	public AppointmentSystemRes updatePatientInfo(String id, String password, String name, String eMail) {
 
@@ -83,7 +245,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		return new AppointmentSystemRes(patient, AppointmentSystemRtnCode.UPDATE_SUCCESSFUL.getMessage());
 	}
 
-	// §ó§ï¯f±w¸ê°T---> ID . password§P§O --> password §ó§ï
+	// æ›´æ”¹ç—…æ‚£è³‡è¨Š---> ID . passwordåˆ¤åˆ¥ --> password æ›´æ”¹
 	@Override
 	public AppointmentSystemRes updatePatientPassword(String id, String password, String newPassword) {
 
@@ -121,7 +283,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 
 	}
 
-	// §R°£¯f±w¸ê°T---> ID . password§P§O --> §R°£
+	// åˆªé™¤ç—…æ‚£è³‡è¨Š---> ID . passwordåˆ¤åˆ¥ --> åˆªé™¤
 	@Override
 	public AppointmentSystemRes deletePatientPassword(String id, String password) {
 
@@ -152,7 +314,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 
 	}
 
-	// ³z¹LID·j´M (»İ­n³z¹L±K½XÅçÃÒ ) -->±K½X¥¿½T´N¥i¥H·j´M¯f±w¸ê®Æ ¡C
+	// é€éIDæœå°‹ (éœ€è¦é€éå¯†ç¢¼é©—è­‰ ) -->å¯†ç¢¼æ­£ç¢ºå°±å¯ä»¥æœå°‹ç—…æ‚£è³‡æ–™ ã€‚
 	@Override
 	public AppointmentSystemRes searchById(String id, String password) {
 
@@ -178,11 +340,11 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		return new AppointmentSystemRes(patient, AppointmentSystemRtnCode.DELETE_SUCCESSFUL.getMessage());
 
 	}
-	// §PÂ_®æ¦¡ : ¯f±w«Ø¥ß¸ê®Æ®æ¦¡¬O§_¥¿½T. ±a¤J°Ñ¼Æ (id, password, name, birthday, gender, eMail)
+	// åˆ¤æ–·æ ¼å¼ : ç—…æ‚£å»ºç«‹è³‡æ–™æ ¼å¼æ˜¯å¦æ­£ç¢º. å¸¶å…¥åƒæ•¸ (id, password, name, birthday, gender, eMail)
 	private AppointmentSystemRes checkCreateParams(String id, String password, String name, String birthday,
 			String gender, String eMail) {
 
-		// ------------------------§PÂ_¿é¤J¬O§_¦³­È--------------------------//
+		// ------------------------åˆ¤æ–·è¼¸å…¥æ˜¯å¦æœ‰å€¼--------------------------//
 
 		if (!StringUtils.hasText(id)) {
 			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.ID_NULL.getMessage());
@@ -208,7 +370,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.EMAIL_NULL.getMessage());
 		}
 
-		// -----------------------§PÂ_¨­¤ÀÃÒªº®æ¦¡¬O§_¥¿½T---------------------------//
+		// -----------------------åˆ¤æ–·èº«åˆ†è­‰çš„æ ¼å¼æ˜¯å¦æ­£ç¢º---------------------------//
 
 		String idPattern = "[A-Z][1-2]\\d{8}";
 
@@ -216,7 +378,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.ID_FAIL.getMessage());
 		}
 
-		// ------------------------§PÂ_¥Í¤é®æ¦¡¬O§_¥¿«o-----------------------------//
+		// ------------------------åˆ¤æ–·ç”Ÿæ—¥æ ¼å¼æ˜¯å¦æ­£å»-----------------------------//
 
 		String birthdayPattern = "[1-2]{1}\\d{3}/[0-1]{1}\\d/\\d{2}";
 
@@ -224,7 +386,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.PASSWORD_FAIL.getMessage());
 		}
 
-		// ------------------------§P§O©Ê§O®æ¦¡¬O§_¥¿«o-----------------------------//
+		// ------------------------åˆ¤åˆ¥æ€§åˆ¥æ ¼å¼æ˜¯å¦æ­£å»-----------------------------//
 
 		String genderPattern = "[mfMF]{1}";
 
@@ -232,7 +394,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.GENDER_FAIL.getMessage());
 		}
 
-		// ------------------------§P§Oemail®æ¦¡¬O§_¥¿«o-----------------------------//
+		// ------------------------åˆ¤åˆ¥emailæ ¼å¼æ˜¯å¦æ­£å»-----------------------------//
 
 		String emailPattern = "[A-Za-z0-9+_.-]+@(.+)$";
 
@@ -244,10 +406,10 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 
 	}
 
-	// §PÂ_®æ¦¡ : ¯f±w§ó§ï¸ê®Æ®æ¦¡¬O§_¥¿½T. ±a¤J°Ñ¼Æ (id, password, name, eMail)
+	// åˆ¤æ–·æ ¼å¼ : ç—…æ‚£æ›´æ”¹è³‡æ–™æ ¼å¼æ˜¯å¦æ­£ç¢º. å¸¶å…¥åƒæ•¸ (id, password, name, eMail)
 	private AppointmentSystemRes checkUpdateParams(String id, String password, String name, String eMail) {
 
-		// ------------------------§PÂ_¿é¤J¬O§_¦³­È--------------------------//
+		// ------------------------åˆ¤æ–·è¼¸å…¥æ˜¯å¦æœ‰å€¼--------------------------//
 
 		if (!StringUtils.hasText(id)) {
 			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.ID_NULL.getMessage());
@@ -265,7 +427,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.EMAIL_NULL.getMessage());
 		}
 
-		// -----------------------§PÂ_¨­¤ÀÃÒªº®æ¦¡¬O§_¥¿½T---------------------------//
+		// -----------------------åˆ¤æ–·èº«åˆ†è­‰çš„æ ¼å¼æ˜¯å¦æ­£ç¢º---------------------------//
 
 		String idPattern = "[A-Z][1-2]\\d{8}";
 
@@ -273,7 +435,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.ID_FAIL.getMessage());
 		}
 
-		// ------------------------§P§Oemail®æ¦¡¬O§_¥¿«o-----------------------------//
+		// ------------------------åˆ¤åˆ¥emailæ ¼å¼æ˜¯å¦æ­£å»-----------------------------//
 
 		String emailPattern = "[A-Za-z0-9+_.-]+@(.+)$";
 
@@ -285,10 +447,10 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 
 	}
 
-	// §PÂ_®æ¦¡ : ¯f±w§ó§ï¸ê®Æ®æ¦¡¬O§_¥¿½T. ±a¤J°Ñ¼Æ (id, password, name, eMail)
+	// åˆ¤æ–·æ ¼å¼ : ç—…æ‚£æ›´æ”¹è³‡æ–™æ ¼å¼æ˜¯å¦æ­£ç¢º. å¸¶å…¥åƒæ•¸ (id, password, name, eMail)
 	private AppointmentSystemRes checkIdPasswordParams(String id, String password) {
 
-		// ------------------------§PÂ_¿é¤J¬O§_¦³­È--------------------------//
+		// ------------------------åˆ¤æ–·è¼¸å…¥æ˜¯å¦æœ‰å€¼--------------------------//
 
 		if (!StringUtils.hasText(id)) {
 			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.ID_NULL.getMessage());
@@ -298,7 +460,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.PASSWORD_NULL.getMessage());
 		}
 
-		// -----------------------§PÂ_¨­¤ÀÃÒªº®æ¦¡¬O§_¥¿½T---------------------------//
+		// -----------------------åˆ¤æ–·èº«åˆ†è­‰çš„æ ¼å¼æ˜¯å¦æ­£ç¢º---------------------------//
 
 		String idPattern = "[A-Z][1-2]\\d{8}";
 
