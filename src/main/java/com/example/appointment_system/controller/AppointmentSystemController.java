@@ -1,10 +1,13 @@
 package com.example.appointment_system.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.appointment_system.constants.AppointmentSystemRtnCode;
+import com.example.appointment_system.entity.Hospital;
 import com.example.appointment_system.ifs.AppointmentSystemService;
 import com.example.appointment_system.vo.AppointmentSystemReq;
 import com.example.appointment_system.vo.AppointmentSystemRes;

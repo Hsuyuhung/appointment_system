@@ -27,10 +27,8 @@ public enum AppointmentSystemRtnCode {
 	DOCTOR_ID_EXISTED("400", "醫生ID格式錯誤。"),
 	DOCTORNAME_DOCTORDEPARTMENT_HOSPITALID_APPOINTMENTTIME_REQUIRED("400", "醫生姓名、"
 			+ "科別、醫院代碼、工作時間，其中一項不能為空。"),
-	HOSPITALID_DEPARTMENT_INEXISTED("400", "醫院代碼或醫院科別不存在。");
+	HOSPITALID_DEPARTMENT_INEXISTED("400", "醫院代碼或醫院科別不存在。"),
 	SUCCESSFUL("200", "Success"), 
-	UPDATE_SUCCESSFUL("200", "Update Success "), 
-	DELETE_SUCCESSFUL("200", "Delete Success "), 
 	ID_NULL("400", "ID is null!!"), 
 	ID_FAIL("400", "ID is fail!!"),
 	ID_EXIST("400", "ID is exist!!"), 

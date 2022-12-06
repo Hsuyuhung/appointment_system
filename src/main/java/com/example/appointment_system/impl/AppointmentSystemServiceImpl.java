@@ -1,5 +1,6 @@
 package com.example.appointment_system.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.example.appointment_system.constants.AppointmentSystemRtnCode;
+import com.example.appointment_system.entity.Doctor;
+import com.example.appointment_system.entity.Hospital;
+import com.example.appointment_system.entity.HospitalId;
 import com.example.appointment_system.entity.Patient;
 import com.example.appointment_system.ifs.AppointmentSystemService;
 import com.example.appointment_system.respository.AppointmentDao;
@@ -18,8 +22,8 @@ import com.example.appointment_system.vo.AppointmentSystemRes;
 @Service
 public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 
-	@Autowired
-	private AppointmentDao appointmentDao;
+//	@Autowired
+//	private AppointmentDao appointmentDao;
 
 	@Autowired
 	private DoctorDao doctorDao;
@@ -30,8 +34,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 	@Autowired
 	private PatientDao patientDao;
 
-
-	//	新增醫院資訊
+//	新增醫院資訊
 	@Override
 	public Hospital createHospitalInfo(String hospitalId, String department, String hospitalName, String phone,
 			String city, String district, String address) {
@@ -92,10 +95,10 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 //	刪除醫院資訊
 	@Override
 	public AppointmentSystemRes deleteHospitalInfo(String hospitalId) {
-		if(hospitalDao.findByHospitalId(hospitalId) == null) {
+		if (hospitalDao.findByHospitalId(hospitalId) == null) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITAL_ID_WRONG.getMessage());
 		}
-		
+
 		hospitalDao.deleteByHospitalId(hospitalId);
 
 		return new AppointmentSystemRes(AppointmentSystemRtnCode.DELETE_SUCCESSFUL.getMessage());
@@ -196,18 +199,19 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 
 	// 建立病患資料
 	@Override
-	public AppointmentSystemRes createPatientInfo(String id, String password, String name, String birthday,	String gender, String eMail) {
+	public AppointmentSystemRes createPatientInfo(String id, String password, String name, String birthday,
+			String gender, String eMail) {
 
 		AppointmentSystemRes checkCreateParams = checkCreateParams(id, password, name, birthday, gender, eMail);
 
 		if (checkCreateParams != null) {
-			
+
 			return checkCreateParams;
 		}
 
 		if (patientDao.existsById(id)) {
-			
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.ID_EXIST.getMessage());
+
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.ID_EXIST.getMessage());
 		}
 
 		Patient patient = new Patient(id, password, name, birthday, gender, eMail);
@@ -229,14 +233,14 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		Optional<Patient> patientOp = patientDao.findById(id);
 
 		if (!patientOp.isPresent()) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.ID_EMPTY.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.ID_EMPTY.getMessage());
 		}
 
 		Patient patient = patientOp.get();
 		String patientDB = patient.getPassword();
 
 		if (!patientDB.equalsIgnoreCase(password)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.PASSWORD_ERROR.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.PASSWORD_ERROR.getMessage());
 		}
 
 		patient.seteMail(eMail);
@@ -259,7 +263,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 
 		if (!patientOp.isPresent()) {
 
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.ID_EMPTY.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.ID_EMPTY.getMessage());
 		}
 
 		//
@@ -268,12 +272,12 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 
 		if (!passwordDB.equalsIgnoreCase(password)) {
 
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.PASSWORD_ERROR.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.PASSWORD_ERROR.getMessage());
 		}
 
 		if (passwordDB.contentEquals(newPassword)) {
 
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.PASSWORD_UNREPEAT.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.PASSWORD_UNREPEAT.getMessage());
 		}
 
 		patient.setPassword(newPassword);
@@ -297,20 +301,20 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 
 		if (!patientOp.isPresent()) {
 
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.ID_EMPTY.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.ID_EMPTY.getMessage());
 		}
-        
+
 		Patient patient = patientOp.get();
 		String patientDB = patient.getPassword();
-		
+
 		if (patientDB.equalsIgnoreCase(password)) {
 
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.PASSWORD_ERROR.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.PASSWORD_ERROR.getMessage());
 		}
 
 		patientDao.deleteById(id);
 
-		return new AppointmentSystemRes(null, AppointmentSystemRtnCode.DELETE_SUCCESSFUL.getMessage());
+		return new AppointmentSystemRes(AppointmentSystemRtnCode.DELETE_SUCCESSFUL.getMessage());
 
 	}
 
@@ -327,19 +331,20 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 
 		if (!patientOp.isPresent()) {
 
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.ID_EMPTY.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.ID_EMPTY.getMessage());
 		}
 		Patient patient = patientOp.get();
 		String patientDB = patient.getPassword();
-		
+
 		if (patientDB.equalsIgnoreCase(password)) {
 
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.PASSWORD_ERROR.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.PASSWORD_ERROR.getMessage());
 		}
 
 		return new AppointmentSystemRes(patient, AppointmentSystemRtnCode.DELETE_SUCCESSFUL.getMessage());
 
 	}
+
 	// 判斷格式 : 病患建立資料格式是否正確. 帶入參數 (id, password, name, birthday, gender, eMail)
 	private AppointmentSystemRes checkCreateParams(String id, String password, String name, String birthday,
 			String gender, String eMail) {
@@ -347,27 +352,27 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		// ------------------------判斷輸入是否有值--------------------------//
 
 		if (!StringUtils.hasText(id)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.ID_NULL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.ID_NULL.getMessage());
 		}
 
 		if (!StringUtils.hasText(password)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.PASSWORD_NULL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.PASSWORD_NULL.getMessage());
 		}
 
 		if (!StringUtils.hasText(name)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.NAME_NULL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.NAME_NULL.getMessage());
 		}
 
 		if (!StringUtils.hasText(birthday)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.BIRTHDAY_NULL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.BIRTHDAY_NULL.getMessage());
 		}
 
 		if (!StringUtils.hasText(gender)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.GENDER_NULL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.GENDER_NULL.getMessage());
 		}
 
 		if (!StringUtils.hasText(eMail)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.EMAIL_NULL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.EMAIL_NULL.getMessage());
 		}
 
 		// -----------------------判斷身分證的格式是否正確---------------------------//
@@ -375,7 +380,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		String idPattern = "[A-Z][1-2]\\d{8}";
 
 		if (!id.matches(idPattern)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.ID_FAIL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.ID_FAIL.getMessage());
 		}
 
 		// ------------------------判斷生日格式是否正卻-----------------------------//
@@ -383,7 +388,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		String birthdayPattern = "[1-2]{1}\\d{3}/[0-1]{1}\\d/\\d{2}";
 
 		if (!birthday.matches(birthdayPattern)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.PASSWORD_FAIL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.PASSWORD_FAIL.getMessage());
 		}
 
 		// ------------------------判別性別格式是否正卻-----------------------------//
@@ -391,7 +396,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		String genderPattern = "[mfMF]{1}";
 
 		if (!gender.matches(genderPattern)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.GENDER_FAIL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.GENDER_FAIL.getMessage());
 		}
 
 		// ------------------------判別email格式是否正卻-----------------------------//
@@ -399,7 +404,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		String emailPattern = "[A-Za-z0-9+_.-]+@(.+)$";
 
 		if (!eMail.matches(emailPattern)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.EMAIL_FAIL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.EMAIL_FAIL.getMessage());
 		}
 
 		return null;
@@ -412,19 +417,19 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		// ------------------------判斷輸入是否有值--------------------------//
 
 		if (!StringUtils.hasText(id)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.ID_NULL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.ID_NULL.getMessage());
 		}
 
 		if (!StringUtils.hasText(password)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.PASSWORD_NULL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.PASSWORD_NULL.getMessage());
 		}
 
 		if (!StringUtils.hasText(name)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.NAME_NULL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.NAME_NULL.getMessage());
 		}
 
 		if (!StringUtils.hasText(eMail)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.EMAIL_NULL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.EMAIL_NULL.getMessage());
 		}
 
 		// -----------------------判斷身分證的格式是否正確---------------------------//
@@ -432,7 +437,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		String idPattern = "[A-Z][1-2]\\d{8}";
 
 		if (!id.matches(idPattern)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.ID_FAIL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.ID_FAIL.getMessage());
 		}
 
 		// ------------------------判別email格式是否正卻-----------------------------//
@@ -440,7 +445,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		String emailPattern = "[A-Za-z0-9+_.-]+@(.+)$";
 
 		if (!eMail.matches(emailPattern)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.EMAIL_FAIL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.EMAIL_FAIL.getMessage());
 		}
 
 		return null;
@@ -453,11 +458,11 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		// ------------------------判斷輸入是否有值--------------------------//
 
 		if (!StringUtils.hasText(id)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.ID_NULL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.ID_NULL.getMessage());
 		}
 
 		if (!StringUtils.hasText(password)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.PASSWORD_NULL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.PASSWORD_NULL.getMessage());
 		}
 
 		// -----------------------判斷身分證的格式是否正確---------------------------//
@@ -465,7 +470,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		String idPattern = "[A-Z][1-2]\\d{8}";
 
 		if (!id.matches(idPattern)) {
-			return new AppointmentSystemRes(null, AppointmentSystemRtnCode.ID_FAIL.getMessage());
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.ID_FAIL.getMessage());
 		}
 
 		return null;

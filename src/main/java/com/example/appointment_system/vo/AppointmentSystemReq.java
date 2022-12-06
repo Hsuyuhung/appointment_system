@@ -1,5 +1,7 @@
 package com.example.appointment_system.vo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AppointmentSystemReq {
 	
 	private String hospitalId;

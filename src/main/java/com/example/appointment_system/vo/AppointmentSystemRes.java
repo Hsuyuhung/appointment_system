@@ -2,9 +2,21 @@ package com.example.appointment_system.vo;
 
 import java.util.List;
 
+import com.example.appointment_system.entity.Doctor;
+import com.example.appointment_system.entity.Hospital;
 import com.example.appointment_system.entity.Patient;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AppointmentSystemRes {
+
+	@JsonProperty(value = "hospital_info")
+	private Hospital hospital;
+
+	@JsonProperty(value = "hospital_list")
+	private List<Hospital> hospitalList;
+	
+	@JsonProperty(value = "doctor_info")
+	private Doctor doctor;
 
 	private Patient patient;
 
@@ -16,9 +28,48 @@ public class AppointmentSystemRes {
 
 	}
 
+	public AppointmentSystemRes(String message, Hospital hospital) {
+		this.message = message;
+		this.hospital = hospital;
+	}
+	
+	public AppointmentSystemRes(Doctor doctor, String message) {
+        this.doctor = doctor;
+        this.message = message;
+	}
+
 	public AppointmentSystemRes(Patient patient, String message) {
 		this.patient = patient;
 		this.message = message;
+	}
+	
+	
+	public AppointmentSystemRes(String message) {
+		this.message = message;
+	}
+
+	public Hospital getHospital() {
+		return hospital;
+	}
+
+	public void setHospital(Hospital hospital) {
+		this.hospital = hospital;
+	}
+
+	public List<Hospital> getHospitalList() {
+		return hospitalList;
+	}
+
+	public void setHospitalList(List<Hospital> hospitalList) {
+		this.hospitalList = hospitalList;
+	}
+
+	public Doctor getDoctor() {
+		return doctor;
+	}
+
+	public void setDoctor(Doctor doctor) {
+		this.doctor = doctor;
 	}
 
 	public Patient getPatient() {
@@ -45,5 +96,4 @@ public class AppointmentSystemRes {
 		this.patientlist = patientlist;
 	}
 
-	
 }

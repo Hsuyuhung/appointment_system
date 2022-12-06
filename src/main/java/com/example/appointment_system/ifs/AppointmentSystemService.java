@@ -1,5 +1,7 @@
 package com.example.appointment_system.ifs;
 
+import com.example.appointment_system.entity.Doctor;
+import com.example.appointment_system.entity.Hospital;
 import com.example.appointment_system.vo.AppointmentSystemRes;
 
 public interface AppointmentSystemService {
