@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Table(name = "hospital_info")
 @IdClass(HospitalId.class)
 public class Hospital {
-	
+
 	@Id
 	@Column(name = "hospital_id")
 	private String hospitalId;
@@ -38,8 +38,8 @@ public class Hospital {
 
 	}
 
-	public Hospital(String hospitalId, String department, String hospitalName, String phone, String city, String district, String address
-			) {
+	public Hospital(String hospitalId, String department, String hospitalName, String phone, String city,
+			String district, String address) {
 		this.hospitalId = hospitalId;
 		this.department = department;
 		this.hospitalName = hospitalName;
@@ -56,7 +56,7 @@ public class Hospital {
 	public void setHospitalId(String hospitalId) {
 		this.hospitalId = hospitalId;
 	}
-	
+
 	public String getDepartment() {
 		return department;
 	}

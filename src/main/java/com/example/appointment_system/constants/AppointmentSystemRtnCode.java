@@ -27,7 +27,25 @@ public enum AppointmentSystemRtnCode {
 	DOCTOR_ID_EXISTED("400", "醫生ID格式錯誤。"),
 	DOCTORNAME_DOCTORDEPARTMENT_HOSPITALID_APPOINTMENTTIME_REQUIRED("400", "醫生姓名、"
 			+ "科別、醫院代碼、工作時間，其中一項不能為空。"),
-	HOSPITALID_DEPARTMENT_INEXISTED("400", "醫院代碼或醫院科別不存在。");
+	HOSPITALID_DEPARTMENT_INEXISTED("400", "醫院代碼或醫院科別不存在。"),
+	SUCCESSFUL("200", "Success"), 
+	ID_NULL("400", "ID is null!!"), 
+	ID_FAIL("400", "ID is fail!!"),
+	ID_EXIST("400", "ID is exist!!"), 
+	ID_EMPTY("400", "ID is empty!!"), 
+	PASSWORD_NULL("400", "PASSWORD is null!!"),
+	PASSWORD_FAIL("400", "PASSWORD is fail!!"), 
+	PASSWORD_ERROR("400", "PASSWORD is Error !!"), 
+	PASSWORD_UNREPEAT("400", "PASSWORD cannot repeat!!"), 
+	NAME_NULL("400", "NAME is null!!"),
+	NAME_FAIL("400", "NAME is fail!!"), 
+	NAME_EXIST("400", "NAME is empty!!"), 
+	BIRTHDAY_NULL("400", "BIRTHDAY is null!!"), 
+	BIRTHDAY_FAIL("400", "BIRTHDAY is fail!!"), 
+	GENDER_NULL("400", "GENDER is null!!"), 
+	GENDER_FAIL("400", "GENDER is fail!!¡A½Ð¿é¤J¥N½XM / F "), 
+	EMAIL_NULL("400", "EMAIL is null!!"), 
+	EMAIL_FAIL("400", "EMAIL is fail!!");
 
 	private String code;
 	private String message;

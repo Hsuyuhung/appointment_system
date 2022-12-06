@@ -25,10 +25,33 @@ public class Patient {
 	@Column(name = "gender")
 	private String gender;
 
-	@Column(name = "e-mail")
+	@Column(name = "e_mail")
 	private String eMail;
 
 	public Patient() {
+
+	}
+
+	public Patient(String id, String password) {
+		this.id = id;
+		this.password = password;
+	}
+
+	public Patient(String id, String password, String name, String birthday, String gender, String eMail) {
+		this.id = id;
+		this.password = password;
+		this.name = name;
+		this.birthday = birthday;
+		this.gender = gender;
+		this.eMail = eMail;
+
+	}
+
+	public Patient(String id, String password, String name, String eMail) {
+		this.id = id;
+		this.password = password;
+		this.name = name;
+		this.eMail = eMail;
 
 	}
 
