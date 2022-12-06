@@ -1,10 +1,17 @@
 CREATE TABLE  IF NOT EXISTS `appointment_info` (
-  `id` varchar(45) NOT NULL,
-  `hospital_id` varchar(45) NOT NULL,
-  `doctor_id` varchar(45) NOT NULL,
-  `appointment_time` varchar(45) NOT NULL,
-  `register` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
+  `auto_id` int NOT NULL AUTO_INCREMENT,
+  `patient_name` varchar(45) NOT NULL,
+  `gender` varchar(45) NOT NULL,
+  `birthday` date NOT NULL,
+  `hospital_name` varchar(45) NOT NULL,
+  `doctor_department` varchar(45) NOT NULL,
+  `doctor_name` varchar(45) NOT NULL,
+  `appointment_date` date NOT NULL,
+  `appointment_week` varchar(45) NOT NULL,
+  `appointment_time` time NOT NULL,
+  `now_time` datetime NOT NULL,
+  `number` int NOT NULL,
+  PRIMARY KEY (`auto_id`)
   );
   
   CREATE TABLE  IF NOT EXISTS `doctor_info` (

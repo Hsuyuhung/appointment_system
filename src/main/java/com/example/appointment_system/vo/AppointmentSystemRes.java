@@ -2,31 +2,36 @@ package com.example.appointment_system.vo;
 
 import java.util.List;
 
+import com.example.appointment_system.entity.Appointment;
 import com.example.appointment_system.entity.Doctor;
 import com.example.appointment_system.entity.Hospital;
 import com.example.appointment_system.entity.Patient;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AppointmentSystemRes {
+
+	private String message;
 
 	@JsonProperty(value = "hospital_info")
 	private Hospital hospital;
 
 	@JsonProperty(value = "hospital_list")
 	private List<Hospital> hospitalList;
-	
+
 	@JsonProperty(value = "doctor_info")
 	private Doctor doctor;
-	
+
 	private List<Doctor> doctorList;
 
 	private Patient patient;
 
-	private String message;
+	private Appointment appointment;
 
 	private List<Patient> patientlist;
+
+	private List<AppoinmentInfo> appointmentInfoList;
 
 	public AppointmentSystemRes() {
 
@@ -36,19 +41,40 @@ public class AppointmentSystemRes {
 		this.message = message;
 		this.hospital = hospital;
 	}
-	
+
+	public AppointmentSystemRes(List<Hospital> hospitalList) {
+		this.hospitalList = hospitalList;
+	}
+
 	public AppointmentSystemRes(Doctor doctor, String message) {
-        this.doctor = doctor;
-        this.message = message;
+		this.doctor = doctor;
+		this.message = message;
+	}
+
+	public AppointmentSystemRes(Patient patient, List<AppoinmentInfo> appointmentInfoList) {
+		this.patient = patient;
+		this.appointmentInfoList = appointmentInfoList;
+	}
+
+	public AppointmentSystemRes(String message) {
+		this.message = message;
 	}
 
 	public AppointmentSystemRes(Patient patient, String message) {
 		this.patient = patient;
 		this.message = message;
 	}
-	
-	
-	public AppointmentSystemRes(String message) {
+
+	public AppointmentSystemRes(Appointment appointment, String message) {
+		this.appointment = appointment;
+		this.message = message;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
 		this.message = message;
 	}
 
@@ -76,6 +102,14 @@ public class AppointmentSystemRes {
 		this.doctor = doctor;
 	}
 
+	public List<Doctor> getDoctorList() {
+		return doctorList;
+	}
+
+	public void setDoctorList(List<Doctor> doctorList) {
+		this.doctorList = doctorList;
+	}
+
 	public Patient getPatient() {
 		return patient;
 	}
@@ -84,12 +118,12 @@ public class AppointmentSystemRes {
 		this.patient = patient;
 	}
 
-	public String getMessage() {
-		return message;
+	public Appointment getAppointment() {
+		return appointment;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setAppointment(Appointment appointment) {
+		this.appointment = appointment;
 	}
 
 	public List<Patient> getPatientlist() {
@@ -100,12 +134,11 @@ public class AppointmentSystemRes {
 		this.patientlist = patientlist;
 	}
 
-	public List<Doctor> getDoctorList() {
-		return doctorList;
+	public List<AppoinmentInfo> getAppointmentInfoList() {
+		return appointmentInfoList;
 	}
 
-	public void setDoctorList(List<Doctor> doctorList) {
-		this.doctorList = doctorList;
+	public void setAppointmentInfoList(List<AppoinmentInfo> appointmentInfoList) {
+		this.appointmentInfoList = appointmentInfoList;
 	}
-
 }

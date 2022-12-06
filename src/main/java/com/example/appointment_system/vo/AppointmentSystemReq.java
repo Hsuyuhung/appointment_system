@@ -34,21 +34,43 @@ public class AppointmentSystemReq {
 
 	private String week;
 
-	private String id;
+	private String patientId;
 
+	@JsonProperty("pdw")
 	private String password;
 
+	@JsonProperty("newpdw")
 	private String newPassword;
 
-	private String name;
+	private String patientName;
 
 	private String birthday;
 
 	private String gender;
 
-	private String eMail;
+	private String email;
+
+	private String medical;
+
+	private String createTime;
+	
+	private int chartNo;
 
 	public AppointmentSystemReq() {
+
+	}
+
+	public AppointmentSystemReq(String patientId, String doctorId, String appointmentTime, String week, String medical,
+			String createTime, String email, String birthday) {
+
+		this.patientId = patientId;
+		this.doctorId = doctorId;
+		this.appointmentTime = appointmentTime;
+		this.week = week;
+		this.medical = medical;
+		this.createTime = createTime;
+		this.email = email;
+		this.birthday =birthday;
 
 	}
 
@@ -76,27 +98,62 @@ public class AppointmentSystemReq {
 		this.week = week;
 	}
 
-	public AppointmentSystemReq(String id, String password, String name, String birthday, String gender, String eMail) {
-		this.id = id;
+	public AppointmentSystemReq(String patientId, String password, String patientName, String birthday, String gender,
+			String email) {
+		this.patientId = patientId;
 		this.password = password;
-		this.name = name;
+		this.patientName = patientName;
 		this.birthday = birthday;
 		this.gender = gender;
-		this.eMail = eMail;
+		this.email = email;
 	}
 
-	public AppointmentSystemReq(String id, String password, String name, String eMail) {
-		this.id = id;
+	public AppointmentSystemReq(String patientId, String password, String patientName, String email) {
+		this.patientId = patientId;
 		this.password = password;
-		this.name = name;
-		this.eMail = eMail;
+		this.patientName = patientName;
+		this.email = email;
 	}
 
-	public AppointmentSystemReq(String id, String password, String newPassword) {
-		this.id = id;
+	public AppointmentSystemReq(String patientId, String password, String newPassword) {
+		this.patientId = patientId;
 		this.password = password;
 		this.newPassword = newPassword;
 
+	}
+
+	
+	
+	public String getPatientName() {
+		return patientName;
+	}
+
+	public void setPatientName(String patientName) {
+		this.patientName = patientName;
+	}
+
+	public String getPatientId() {
+		return patientId;
+	}
+
+	public void setPatientId(String patientId) {
+		this.patientId = patientId;
+	}
+
+	public String getMedical() {
+		return medical;
+	}
+
+	public void setMedical(String medical) {
+		this.medical = medical;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
 	}
 
 	public String getHospitalId() {
@@ -203,14 +260,7 @@ public class AppointmentSystemReq {
 		this.newPassword = newPassword;
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
+	
 	public String getPassword() {
 		return password;
 	}
@@ -219,13 +269,6 @@ public class AppointmentSystemReq {
 		this.password = password;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	public String getBirthday() {
 		return birthday;
@@ -243,12 +286,19 @@ public class AppointmentSystemReq {
 		this.gender = gender;
 	}
 
-	public String geteMail() {
-		return eMail;
+	public String getEmail() {
+		return email;
 	}
 
-	public void seteMail(String eMail) {
-		this.eMail = eMail;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
+	public int getChartNo() {
+		return chartNo;
+	}
+
+	public void setChartNo(int chartNo) {
+		this.chartNo = chartNo;
+	}
 }
