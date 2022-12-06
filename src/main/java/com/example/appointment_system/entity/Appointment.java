@@ -11,19 +11,19 @@ public class Appointment {
 
 	@Id
 	@Column(name = "id")
-	String id;
+	private String id;
 
 	@Column(name = "hospital_id")
-	String hospitalId;
+	private String hospitalId;
 
 	@Column(name = "doctor_id")
-	String doctorId;
+	private String doctorId;
 
 	@Column(name = "appintment_time")
-	String appintmentTime;
+	private String appintmentTime;
 
 	@Column(name = "regiter")
-	String regiter;
+	private String regiter;
 
 	public Appointment() {
 

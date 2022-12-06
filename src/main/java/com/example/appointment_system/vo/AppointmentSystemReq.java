@@ -1,5 +1,7 @@
 package com.example.appointment_system.vo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AppointmentSystemReq {
 
 	private String hospitalId;
@@ -15,6 +17,18 @@ public class AppointmentSystemReq {
 	private String district;
 
 	private String address;
+	
+	@JsonProperty("doctorId")
+	private String doctorId;
+
+	@JsonProperty("doctorName")
+	private String doctorName;
+
+	@JsonProperty("doctorDepartment")
+	private String doctorDepartment;
+
+	@JsonProperty("appointmentTime")
+	private String appointmentTime;
 
 	public AppointmentSystemReq() {
 
@@ -32,6 +46,14 @@ public class AppointmentSystemReq {
 		this.city = city;
 		this.district = district;
 		this.address = address;
+	}
+	
+	public AppointmentSystemReq(String hospitalId, String doctorId, String doctorName, String doctorDepartment, String appointmentTime) {
+		this.hospitalId = hospitalId;
+		this.doctorId = doctorId;
+		this.doctorName = doctorName;
+		this.doctorDepartment = doctorDepartment;
+		this.appointmentTime = appointmentTime;
 	}
 
 	public String getHospitalId() {
@@ -88,5 +110,44 @@ public class AppointmentSystemReq {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+	
+
+	public String getDoctorId() {
+		return doctorId;
+	}
+
+
+	public void setDoctorId(String doctorId) {
+		this.doctorId = doctorId;
+	}
+
+
+	public String getDoctorName() {
+		return doctorName;
+	}
+
+
+	public void setDoctorName(String doctorName) {
+		this.doctorName = doctorName;
+	}
+
+
+	public String getDoctorDepartment() {
+		return doctorDepartment;
+	}
+
+
+	public void setDoctorDepartment(String doctorDepartment) {
+		this.doctorDepartment = doctorDepartment;
+	}
+
+	public String getAppointmentTime() {
+		return appointmentTime;
+	}
+
+
+	public void setAppointmentTime(String appointmentTime) {
+		this.appointmentTime = appointmentTime;
 	}
 }

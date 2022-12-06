@@ -1,7 +1,5 @@
 package com.example.appointment_system.entity;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -22,7 +20,7 @@ public class Patient {
 	private String name;
 
 	@Column(name = "birthday")
-	private Date birthday;
+	private String birthday;
 
 	@Column(name = "gender")
 	private String gender;
@@ -58,11 +56,11 @@ public class Patient {
 		this.name = name;
 	}
 
-	public Date getBirthday() {
+	public String getBirthday() {
 		return birthday;
 	}
 
-	public void setBirthday(Date birthday) {
+	public void setBirthday(String birthday) {
 		this.birthday = birthday;
 	}
 
