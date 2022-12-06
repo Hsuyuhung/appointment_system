@@ -3,20 +3,44 @@ package com.example.appointment_system.ifs;
 import com.example.appointment_system.vo.AppointmentSystemRes;
 
 public interface AppointmentSystemService {
+	
+//	å‰µå»ºé†«é™¢è³‡è¨Š
+	public Hospital createHospitalInfo(String hospitalId, String department, String hospitalName, String phone,
+			String city, String district, String address);
 
-	// «Ø¥ß¯f±w¸ê°T
+//	æ›´æ–°é†«é™¢è³‡è¨Š
+	public AppointmentSystemRes updateHospitalInfo(String hospitalId, String hospitalName, String phone, String city,
+			String district, String address);
+	
+//	åˆªé™¤é†«é™¢è³‡è¨Š
+	public AppointmentSystemRes deleteHospitalInfo(String hospitalId);
+
+//	å‰µå»ºé†«é™¢ç§‘åˆ¥
+	public AppointmentSystemRes deleteHospitalDepartment(String hospitalId, String department);
+	
+	//doctor1 :ã€€å‰µå»ºé†«ç”Ÿè³‡è¨Š
+	public AppointmentSystemRes createDoctorInfo(String hospitalId, String doctorId, String doctorName, String doctorDepartment,
+			String appointmentTime);
+	
+	//doctor2 : æ›´æ–°é†«ç”Ÿè³‡è¨Š
+	public AppointmentSystemRes updateDoctorInfo(String doctorId, String doctorName, String doctorDepartment, String hospitalId,String appointmentTime);
+
+	//doctor3 : åˆªé™¤é†«ç”Ÿè³‡è¨Š
+	public Doctor deleteDoctorInfo(String doctorId);
+
+	// å»ºç«‹ç—…æ‚£è³‡è¨Š
 	public AppointmentSystemRes createPatientInfo(String id, String password, String name, String birthday, String gender, String eMail);
 
-	// §ó§ï¯f±w¸ê°T---> ID  .password §P§O.name eMail§ó§ï
+	// æ›´æ”¹ç—…æ‚£è³‡è¨Š---> ID  .password åˆ¤åˆ¥.name eMailæ›´æ”¹
 	public AppointmentSystemRes updatePatientInfo(String id, String password, String name, String eMail);
 
-	// §ó§ï¯f±w¸ê°T---> ID . password§P§O --> password §ó§ï
+	// æ›´æ”¹ç—…æ‚£è³‡è¨Š---> ID . passwordåˆ¤åˆ¥ --> password æ›´æ”¹
 	public AppointmentSystemRes updatePatientPassword(String id, String password,String newPassword);
 
-	// §R°£¯f±w¸ê°T---> ID . password§P§O --> §R°£
+	// åˆªé™¤ç—…æ‚£è³‡è¨Š---> ID . passwordåˆ¤åˆ¥ --> åˆªé™¤
 	public AppointmentSystemRes deletePatientPassword(String id, String password);
 	
-	//¬d¸ß¯f±w°ò¥»°T®§(¤£¥]§t´N¶E¬ö¿ı ¸ò ¹w¬ù¬ö¿ı)
+	//æŸ¥è©¢ç—…æ‚£åŸºæœ¬è¨Šæ¯(ä¸åŒ…å«å°±è¨ºç´€éŒ„ è·Ÿ é ç´„ç´€éŒ„)
 	public AppointmentSystemRes searchById (String id, String password);
 	
 	
