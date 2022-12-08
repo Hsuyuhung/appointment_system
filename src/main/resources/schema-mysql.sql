@@ -7,14 +7,16 @@ CREATE TABLE  IF NOT EXISTS `appointment_info` (
   PRIMARY KEY (`id`)
   );
   
-   CREATE TABLE  IF NOT EXISTS `doctor_info` (
+  CREATE TABLE  IF NOT EXISTS `doctor_info` (
   `doctor_id` varchar(45) NOT NULL,
-  `doctor_name` varchar(45) DEFAULT NULL,
-  `doctor_department` varchar(45) DEFAULT NULL,
-  `hospital_id` varchar(45) DEFAULT NULL,
-  `appointment_time` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`doctor_id`)
-  );
+  `doctor_name` varchar(45) NOT NULL,
+  `doctor_department` varchar(45) NOT NULL,
+  `hospital_id` varchar(45) NOT NULL,
+  `appointment_time` varchar(45) NOT NULL,
+  `week` varchar(45) NOT NULL,
+  `auto_id` int NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`auto_id`)
+   );
   
    CREATE TABLE  IF NOT EXISTS `hospital_info` (
   `hospital_id` varchar(45) NOT NULL,

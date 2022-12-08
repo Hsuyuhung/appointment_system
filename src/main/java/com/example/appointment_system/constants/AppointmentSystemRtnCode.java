@@ -23,11 +23,13 @@ public enum AppointmentSystemRtnCode {
 	DEPARTMENT_REQUIRED("400", "醫院科別不能為空。"),
 	DOCTORAPPOINTMENTTIME_REQUIRED("400", "醫生工作時間不能為空。"),
 	DOCTORID_EXISTED("400", "醫生ID已經存在。"),
+	DOCTORAPPOINTMENTTIME_WEEK_EXISTED("400", "同醫生工作時間及星期已經存在。"),
 	DOCTORID_INEXISTED("400", "醫生ID不存在。"),
 	DOCTOR_ID_EXISTED("400", "醫生ID格式錯誤。"),
-	DOCTORNAME_DOCTORDEPARTMENT_HOSPITALID_APPOINTMENTTIME_REQUIRED("400", "醫生姓名、"
-			+ "科別、醫院代碼、工作時間，其中一項不能為空。"),
+	DOCTORNAME_DOCTORDEPARTMENT_HOSPITALID_REQUIRED("400", "醫生姓名、"
+			+ "科別、醫院代碼，其中一項不能為空。"),
 	HOSPITALID_DEPARTMENT_INEXISTED("400", "醫院代碼或醫院科別不存在。"),
+	WEEK_REQUIRED("400", "星期不可為空。"),
 	SUCCESSFUL("200", "Success"), 
 	ID_NULL("400", "ID is null!!"), 
 	ID_FAIL("400", "ID is fail!!"),

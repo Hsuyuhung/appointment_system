@@ -1,11 +1,13 @@
 package com.example.appointment_system.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AppointmentSystemReq {
-	
+
 	private String hospitalId;
-	
+
 	private String department;
 
 	private String hospitalName;
@@ -17,7 +19,7 @@ public class AppointmentSystemReq {
 	private String district;
 
 	private String address;
-	
+
 	@JsonProperty("doctorId")
 	private String doctorId;
 
@@ -29,6 +31,8 @@ public class AppointmentSystemReq {
 
 	@JsonProperty("appointmentTime")
 	private String appointmentTime;
+
+	private String week;
 
 	private String id;
 
@@ -47,9 +51,9 @@ public class AppointmentSystemReq {
 	public AppointmentSystemReq() {
 
 	}
-	
-		public AppointmentSystemReq(String hospitalId, String department, String hospitalName, String phone, String city, String district,
-			String address) {
+
+	public AppointmentSystemReq(String hospitalId, String department, String hospitalName, String phone, String city,
+			String district, String address) {
 		this.hospitalId = hospitalId;
 		this.department = department;
 		this.hospitalName = hospitalName;
@@ -61,13 +65,15 @@ public class AppointmentSystemReq {
 		this.district = district;
 		this.address = address;
 	}
-	
-	public AppointmentSystemReq(String hospitalId, String doctorId, String doctorName, String doctorDepartment, String appointmentTime) {
+
+	public void createDoctor(String hospitalId, String doctorId, String doctorName, String doctorDepartment,
+			String appointmentTime, String week) {
 		this.hospitalId = hospitalId;
 		this.doctorId = doctorId;
 		this.doctorName = doctorName;
 		this.doctorDepartment = doctorDepartment;
 		this.appointmentTime = appointmentTime;
+		this.week = week;
 	}
 
 	public AppointmentSystemReq(String id, String password, String name, String birthday, String gender, String eMail) {
@@ -92,15 +98,15 @@ public class AppointmentSystemReq {
 		this.newPassword = newPassword;
 
 	}
-	
-		public String getHospitalId() {
+
+	public String getHospitalId() {
 		return hospitalId;
 	}
 
 	public void setHospitalId(String hospitalId) {
 		this.hospitalId = hospitalId;
 	}
-	
+
 	public String getDepartment() {
 		return department;
 	}
@@ -148,32 +154,26 @@ public class AppointmentSystemReq {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
 
 	public String getDoctorId() {
 		return doctorId;
 	}
 
-
 	public void setDoctorId(String doctorId) {
 		this.doctorId = doctorId;
 	}
-
 
 	public String getDoctorName() {
 		return doctorName;
 	}
 
-
 	public void setDoctorName(String doctorName) {
 		this.doctorName = doctorName;
 	}
 
-
 	public String getDoctorDepartment() {
 		return doctorDepartment;
 	}
-
 
 	public void setDoctorDepartment(String doctorDepartment) {
 		this.doctorDepartment = doctorDepartment;
@@ -183,9 +183,16 @@ public class AppointmentSystemReq {
 		return appointmentTime;
 	}
 
-
 	public void setAppointmentTime(String appointmentTime) {
 		this.appointmentTime = appointmentTime;
+	}
+
+	public String getWeek() {
+		return week;
+	}
+
+	public void setWeek(String week) {
+		this.week = week;
 	}
 
 	public String getNewPassword() {

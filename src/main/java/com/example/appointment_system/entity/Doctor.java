@@ -2,6 +2,8 @@ package com.example.appointment_system.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -10,6 +12,10 @@ import javax.persistence.Table;
 public class Doctor {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "auto_id")
+	private String autoId;
+	
 	@Column(name = "doctor_id")
 	private String doctorId;
 
@@ -24,18 +30,22 @@ public class Doctor {
 
 	@Column(name = "appointment_time")
 	private String appointmentTime;
+	
+	@Column(name = "week")
+	private String week;
 
 	public Doctor() {
 
 	}
 
 	public Doctor(String hospitalId, String doctorId, String doctorName, String doctorDepartment,
-			String appointmentTime) {
+			String appointmentTime, String week) {
 		this.hospitalId = hospitalId;
 		this.doctorId = doctorId;
 		this.doctorName = doctorName;
 		this.doctorDepartment = doctorDepartment;
 		this.appointmentTime = appointmentTime;
+		this.week = week;
 	}
 
 	public String getDoctorId() {
@@ -77,4 +87,21 @@ public class Doctor {
 	public void setAppointmentTime(String appointmentTime) {
 		this.appointmentTime = appointmentTime;
 	}
+
+	public String getAutoId() {
+		return autoId;
+	}
+
+	public void setAutoId(String autoId) {
+		this.autoId = autoId;
+	}
+
+	public String getWeek() {
+		return week;
+	}
+
+	public void setWeek(String week) {
+		this.week = week;
+	}
+	
 }

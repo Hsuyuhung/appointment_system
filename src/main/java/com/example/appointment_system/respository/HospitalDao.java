@@ -16,5 +16,7 @@ public interface HospitalDao extends JpaRepository<Hospital, HospitalId> {
 	public List<Hospital> deleteByHospitalId(String hospitalId);
 
 	public Hospital findByHospitalIdAndDepartment(String hospitalId, String department);
+	
+	public List<Hospital> findByDepartment(String department);
 
 }

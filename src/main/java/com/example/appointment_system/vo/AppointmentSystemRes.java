@@ -5,8 +5,10 @@ import java.util.List;
 import com.example.appointment_system.entity.Doctor;
 import com.example.appointment_system.entity.Hospital;
 import com.example.appointment_system.entity.Patient;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AppointmentSystemRes {
 
 	@JsonProperty(value = "hospital_info")
@@ -17,6 +19,8 @@ public class AppointmentSystemRes {
 	
 	@JsonProperty(value = "doctor_info")
 	private Doctor doctor;
+	
+	private List<Doctor> doctorList;
 
 	private Patient patient;
 
@@ -94,6 +98,14 @@ public class AppointmentSystemRes {
 
 	public void setPatientlist(List<Patient> patientlist) {
 		this.patientlist = patientlist;
+	}
+
+	public List<Doctor> getDoctorList() {
+		return doctorList;
+	}
+
+	public void setDoctorList(List<Doctor> doctorList) {
+		this.doctorList = doctorList;
 	}
 
 }

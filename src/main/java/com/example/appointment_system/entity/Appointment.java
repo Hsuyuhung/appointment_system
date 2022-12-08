@@ -1,5 +1,7 @@
 package com.example.appointment_system.entity;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,16 +17,17 @@ public class Appointment {
 	int id;
 	
 	@Column(name = "hospital_id")
-	String hospitalId;
+	private String hospitalId;
 	
 	@Column(name = "doctor_id")
-	String doctorId;
+	private String doctorId;
 	
 	@Column(name = "appintment_time")
-	String appintmentTime;
+	private String appintmentTime;
 	
-	@Column(name = "regiter")
-	String regiter;
+	@Column(name = "register")
+	private String register;
+	
 	
 	public Appointment() {
 		
@@ -62,14 +65,13 @@ public class Appointment {
 		this.appintmentTime = appintmentTime;
 	}
 
-	public String getRegiter() {
-		return regiter;
+	public String getRegister() {
+		return register;
 	}
 
-	public void setRegiter(String regiter) {
-		this.regiter = regiter;
+	public void setRegister(String register) {
+		this.register = register;
 	}
-	
-	
+
 	
 }

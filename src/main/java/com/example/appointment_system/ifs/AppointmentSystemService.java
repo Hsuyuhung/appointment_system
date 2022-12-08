@@ -22,13 +22,13 @@ public interface AppointmentSystemService {
 	
 	//doctor1 :　創建醫生資訊
 	public AppointmentSystemRes createDoctorInfo(String hospitalId, String doctorId, String doctorName, String doctorDepartment,
-			String appointmentTime);
+			String appointmentTime, String week);
 	
-	//doctor2 : 更新醫生資訊
-	public AppointmentSystemRes updateDoctorInfo(String doctorId, String doctorName, String doctorDepartment, String hospitalId,String appointmentTime);
+	//doctor2 : 更新醫生資訊(科別、看診時間跟星期不可改動)
+	public AppointmentSystemRes updateDoctorInfo(String doctorId, String doctorName, String doctorDepartment, String hospitalId);
 
 	//doctor3 : 刪除醫生資訊
-	public Doctor deleteDoctorInfo(String doctorId);
+	public AppointmentSystemRes deleteDoctorInfo(String doctorId);
 
 	// 建立病患資訊
 	public AppointmentSystemRes createPatientInfo(String id, String password, String name, String birthday, String gender, String eMail);
