@@ -16,6 +16,4 @@ public interface AppointmentDao extends JpaRepository<Appointment, Integer> {
 
 	public List<Appointment> findByDoctorIdAndAppointmentTimeAndWeek(String doctorId, String appointmentTime,
 			String week);
-	
-
 }
