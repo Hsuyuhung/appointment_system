@@ -69,6 +69,11 @@ public class AppointmentSystemRes {
 		this.appointment = appointment;
 		this.message = message;
 	}
+	
+	public AppointmentSystemRes(List<Doctor> doctorList, String message) {
+		this.doctorList = doctorList;
+		this.message = message;
+	}
 
 	public String getMessage() {
 		return message;

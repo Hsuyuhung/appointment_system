@@ -665,4 +665,13 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		return new AppointmentSystemRes(AppointmentSystemRtnCode.DELETE_SUCCESSFUL.getMessage());
 	}
 
+	@Override
+	public AppointmentSystemRes findByDoctorDepartment(String doctorDepartment) {
+		List<Doctor> doctorList = doctorDao.findByDoctorDepartment(doctorDepartment);
+		if(doctorList.isEmpty()) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.NOT_FIND.getMessage());
+		}
+		return new AppointmentSystemRes(doctorList, AppointmentSystemRtnCode.SEARCH_SUCCESSFUL.getMessage());
+	}
+
 }

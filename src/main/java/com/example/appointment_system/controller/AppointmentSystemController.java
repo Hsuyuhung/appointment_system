@@ -322,4 +322,13 @@ public class AppointmentSystemController {
 		return appointmentSystemService.deleteAppointment(req.getChartNo());
 
 	}
+	
+	//依科別搜尋醫生
+	@PostMapping(value = "/api/findByDoctorDepartment")
+	public AppointmentSystemRes findByDoctorDepartment(@RequestBody AppointmentSystemReq req) {
+		if (!StringUtils.hasText(req.getDoctorDepartment())) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORDEPARTMENT_REQUIRED.getMessage());
+		}
+		return appointmentSystemService.findByDoctorDepartment(req.getDoctorDepartment());
+	}
 }
