@@ -16,7 +16,7 @@
 //    void sendSimpleMessage() {
 //
 //        SimpleMailMessage message = new SimpleMailMessage(); 
-//        message.setTo("entyu61@gmail.com"); 
+//        message.setTo(""); 
 //        message.setSubject("測試"); 
 //        message.setText("內文標題");
 //        emailSender.send(message);
