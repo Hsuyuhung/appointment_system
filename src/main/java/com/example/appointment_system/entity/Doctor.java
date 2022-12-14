@@ -88,6 +88,7 @@ public class Doctor {
 		this.appointmentTime = appointmentTime;
 	}
 
+
 	public String getAutoId() {
 		return autoId;
 	}
@@ -105,3 +106,4 @@ public class Doctor {
 	}
 	
 }
+

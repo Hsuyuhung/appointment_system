@@ -2,7 +2,7 @@ package com.example.appointment_system.ifs;
 
 import com.example.appointment_system.entity.Doctor;
 import com.example.appointment_system.entity.Hospital;
-import com.example.appointment_system.vo.AppointmentSystemRes;
+import com.example.appointment_system.vo.AppointmentSystemRes;	
 
 public interface AppointmentSystemService {
 	
@@ -44,7 +44,5 @@ public interface AppointmentSystemService {
 	
 	//查詢病患基本訊息(不包含就診紀錄 跟 預約紀錄)
 	public AppointmentSystemRes searchById (String id, String password);
-	
-	
 	
 }

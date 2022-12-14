@@ -250,5 +250,4 @@ public class AppointmentSystemReq {
 	public void seteMail(String eMail) {
 		this.eMail = eMail;
 	}
-
 }

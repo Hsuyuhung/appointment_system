@@ -13,10 +13,15 @@ CREATE TABLE  IF NOT EXISTS `appointment_info` (
   `doctor_department` varchar(45) NOT NULL,
   `hospital_id` varchar(45) NOT NULL,
   `appointment_time` varchar(45) NOT NULL,
+<<<<<<< HEAD
   `week` varchar(45) NOT NULL,
   `auto_id` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`auto_id`)
    );
+=======
+  PRIMARY KEY (`doctor_id`)
+  );
+>>>>>>> branch 'hospital' of https://github.com/Hsuyuhung/appointment_system.git
   
    CREATE TABLE  IF NOT EXISTS `hospital_info` (
   `hospital_id` varchar(45) NOT NULL,

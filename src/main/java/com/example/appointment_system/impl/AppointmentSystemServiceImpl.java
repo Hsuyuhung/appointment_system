@@ -13,7 +13,6 @@ import com.example.appointment_system.entity.Hospital;
 import com.example.appointment_system.entity.HospitalId;
 import com.example.appointment_system.entity.Patient;
 import com.example.appointment_system.ifs.AppointmentSystemService;
-import com.example.appointment_system.respository.AppointmentDao;
 import com.example.appointment_system.respository.DoctorDao;
 import com.example.appointment_system.respository.HospitalDao;
 import com.example.appointment_system.respository.PatientDao;

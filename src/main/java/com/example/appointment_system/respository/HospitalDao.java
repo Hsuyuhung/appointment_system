@@ -10,12 +10,13 @@ import com.example.appointment_system.entity.HospitalId;
 
 @Repository
 public interface HospitalDao extends JpaRepository<Hospital, HospitalId> {
-  
- 	public List<Hospital> findByHospitalId(String hospitalId);
+
+	public List<Hospital> findByHospitalId(String hospitalId);
 
 	public List<Hospital> deleteByHospitalId(String hospitalId);
 
 	public Hospital findByHospitalIdAndDepartment(String hospitalId, String department);
+
 	
 	public List<Hospital> findByDepartment(String department);
 

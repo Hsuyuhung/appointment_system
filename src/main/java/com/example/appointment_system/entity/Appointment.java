@@ -7,37 +7,43 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
-@Table(name = "appointment")
+@Table(name = "appointment_info")
 public class Appointment {
-	
+
 	@Id
 	@Column(name = "id")
-	int id;
-	
+	private String id;
+
 	@Column(name = "hospital_id")
 	private String hospitalId;
-	
+
 	@Column(name = "doctor_id")
 	private String doctorId;
-	
+
 	@Column(name = "appintment_time")
 	private String appintmentTime;
+
 	
 	@Column(name = "register")
 	private String register;
 	
 	
+
+
+	@Column(name = "regiter")
+	private String regiter;
+
+
 	public Appointment() {
-		
+
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -73,5 +79,4 @@ public class Appointment {
 		this.register = register;
 	}
 
-	
 }

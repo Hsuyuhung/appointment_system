@@ -10,8 +10,8 @@ import com.example.appointment_system.constants.AppointmentSystemRtnCode;
 import com.example.appointment_system.entity.Doctor;
 import com.example.appointment_system.entity.Hospital;
 import com.example.appointment_system.ifs.AppointmentSystemService;
-import com.example.appointment_system.vo.AppointmentSystemReq;
 import com.example.appointment_system.vo.AppointmentSystemRes;
+import com.example.appointment_system.vo.AppointmentSystemReq;
 
 @RestController
 public class AppointmentSystemController {
@@ -71,6 +71,7 @@ public class AppointmentSystemController {
 
 		return appointmentSystemService.updateHospitalInfo(req.getHospitalId(), req.getHospitalName(), req.getPhone(),
 				req.getCity(), req.getDistrict(), req.getAddress());
+
 	}
 
 	@PostMapping(value = "api/delete_hospital_info")
@@ -83,6 +84,7 @@ public class AppointmentSystemController {
 	public AppointmentSystemRes deleteHospitalDepartment(@RequestBody AppointmentSystemReq req) {
 
 		return appointmentSystemService.deleteHospitalDepartment(req.getHospitalId(), req.getDepartment());
+
 	}
 
 	// 新增醫生資訊
@@ -94,8 +96,7 @@ public class AppointmentSystemController {
 		}
 
 		AppointmentSystemRes doctor = appointmentSystemService.createDoctorInfo(req.getHospitalId(), req.getDoctorId(),
-				req.getDoctorName(), req.getDoctorDepartment(), req.getAppointmentTime(), req.getWeek()
-				);
+				req.getDoctorName(), req.getDoctorDepartment(), req.getAppointmentTime(), req.getWeek());
 
 		return doctor;
 	}
@@ -112,7 +113,7 @@ public class AppointmentSystemController {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORDEPARTMENT_REQUIRED.getMessage());
 		} else if (!StringUtils.hasText(req.getAppointmentTime())) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORAPPOINTMENTTIME_REQUIRED.getMessage());
-		}else if(!StringUtils.hasText(req.getWeek())) {
+		} else if (!StringUtils.hasText(req.getWeek())) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.WEEK_REQUIRED.getMessage());
 		} else if (!req.getDoctorId().matches("[A-Z]\\d{6}")) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTOR_ID_EXISTED.getMessage());
@@ -123,7 +124,7 @@ public class AppointmentSystemController {
 	// 更新醫生資訊
 	@PostMapping(value = "/api/updateDoctorInfo")
 	public AppointmentSystemRes updateDoctorInfo(@RequestBody AppointmentSystemReq req) {
-		AppointmentSystemRes doctor = appointmentSystemService.updateDoctorInfo(req.getDoctorId(), req.getDoctorName(), 
+		AppointmentSystemRes doctor = appointmentSystemService.updateDoctorInfo(req.getDoctorId(), req.getDoctorName(),
 				req.getDoctorDepartment(), req.getHospitalId());
 		if (doctor == null) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORID_REQUIRED.getMessage());
@@ -146,7 +147,6 @@ public class AppointmentSystemController {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORID_REQUIRED.getMessage());
 		}
 		return appointmentSystemService.deleteDoctorInfo(req.getDoctorId());
-
 	}
 
 	// 建立病患資訊
@@ -189,5 +189,4 @@ public class AppointmentSystemController {
 		return appointmentSystemService.searchById(req.getId(), req.getPassword());
 
 	}
-
 }
