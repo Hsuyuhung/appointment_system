@@ -665,6 +665,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		return new AppointmentSystemRes(AppointmentSystemRtnCode.DELETE_SUCCESSFUL.getMessage());
 	}
 
+	//依科別找醫生資訊
 	@Override
 	public AppointmentSystemRes findByDoctorDepartment(String doctorDepartment) {
 		List<Doctor> doctorList = doctorDao.findByDoctorDepartment(doctorDepartment);
