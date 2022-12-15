@@ -1,5 +1,8 @@
 package com.example.appointment_system.vo;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -34,21 +37,58 @@ public class AppointmentSystemReq {
 
 	private String week;
 
-	private String id;
+	private String patientId;
 
+	@JsonProperty("pdw")
 	private String password;
 
+	@JsonProperty("newpdw")
 	private String newPassword;
 
-	private String name;
+	private String patientName;
 
 	private String birthday;
 
 	private String gender;
 
-	private String eMail;
+	private String email;
+
+	private String medical;
+
+	private LocalDateTime createTime;
+
+	private int chartNo;
+
+	// 預約看診日期 12/14新增
+	private LocalDate appointmentDate;
 
 	public AppointmentSystemReq() {
+
+	}
+
+	public AppointmentSystemReq(String patientId, String doctorId, String appointmentTime, String week,
+			LocalDate appointmentDate, LocalDateTime createTime) {
+
+		this.patientId = patientId;
+		this.doctorId = doctorId;
+		this.appointmentTime = appointmentTime;
+		this.week = week;
+		this.appointmentDate = appointmentDate;
+		this.createTime = createTime;
+
+	}
+
+	public AppointmentSystemReq(String patientId, String doctorId, String appointmentTime, String week, String medical,
+			LocalDateTime createTime, String email, String birthday) {
+
+		this.patientId = patientId;
+		this.doctorId = doctorId;
+		this.appointmentTime = appointmentTime;
+		this.week = week;
+		this.medical = medical;
+		this.createTime = createTime;
+		this.email = email;
+		this.birthday = birthday;
 
 	}
 
@@ -76,27 +116,68 @@ public class AppointmentSystemReq {
 		this.week = week;
 	}
 
-	public AppointmentSystemReq(String id, String password, String name, String birthday, String gender, String eMail) {
-		this.id = id;
+	public AppointmentSystemReq(String patientId, String password, String patientName, String birthday, String gender,
+			String email) {
+		this.patientId = patientId;
 		this.password = password;
-		this.name = name;
+		this.patientName = patientName;
 		this.birthday = birthday;
 		this.gender = gender;
-		this.eMail = eMail;
+		this.email = email;
 	}
 
-	public AppointmentSystemReq(String id, String password, String name, String eMail) {
-		this.id = id;
+	public AppointmentSystemReq(String patientId, String password, String patientName, String email) {
+		this.patientId = patientId;
 		this.password = password;
-		this.name = name;
-		this.eMail = eMail;
+		this.patientName = patientName;
+		this.email = email;
 	}
 
-	public AppointmentSystemReq(String id, String password, String newPassword) {
-		this.id = id;
+	public AppointmentSystemReq(String patientId, String password, String newPassword) {
+		this.patientId = patientId;
 		this.password = password;
 		this.newPassword = newPassword;
 
+	}
+
+	public LocalDate getAppointmentDate() {
+		return appointmentDate;
+	}
+
+	public void setAppointmentDate(LocalDate appointmentDate) {
+		this.appointmentDate = appointmentDate;
+	}
+
+	public String getPatientName() {
+		return patientName;
+	}
+
+	public void setPatientName(String patientName) {
+		this.patientName = patientName;
+	}
+
+	public String getPatientId() {
+		return patientId;
+	}
+
+	public void setPatientId(String patientId) {
+		this.patientId = patientId;
+	}
+
+	public String getMedical() {
+		return medical;
+	}
+
+	public void setMedical(String medical) {
+		this.medical = medical;
+	}
+
+	public LocalDateTime getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(LocalDateTime createTime) {
+		this.createTime = createTime;
 	}
 
 	public String getHospitalId() {
@@ -203,28 +284,12 @@ public class AppointmentSystemReq {
 		this.newPassword = newPassword;
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
 	public String getPassword() {
 		return password;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getBirthday() {
@@ -243,12 +308,19 @@ public class AppointmentSystemReq {
 		this.gender = gender;
 	}
 
-	public String geteMail() {
-		return eMail;
+	public String getEmail() {
+		return email;
 	}
 
-	public void seteMail(String eMail) {
-		this.eMail = eMail;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
+	public int getChartNo() {
+		return chartNo;
+	}
+
+	public void setChartNo(int chartNo) {
+		this.chartNo = chartNo;
+	}
 }

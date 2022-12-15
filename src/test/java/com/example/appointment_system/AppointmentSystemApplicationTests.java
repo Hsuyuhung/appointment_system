@@ -15,10 +15,5 @@ class AppointmentSystemApplicationTests {
 	@Autowired
 	DoctorDao doctorDao;
 
-	@Test
-	public void findByDoctorIdAndAppointmentTimeAndWeekTest() {
-		List<Doctor> awList = doctorDao.findByDoctorIdAndAppointmentTimeAndWeek("Z001013", "下午", "星期二");
-		System.out.println(awList);
-	}
-
+	
 }

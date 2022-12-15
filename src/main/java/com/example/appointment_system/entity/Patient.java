@@ -5,19 +5,26 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
 @Table(name = "patient_info")
 public class Patient {
 
+	
+    //病人ID
 	@Id
-	@Column(name = "id")
-	private String id;
+	@Column(name = "patient_id")
+	private String patientId;
 
+	//密碼
 	@Column(name = "password")
 	private String password;
 
-	@Column(name = "name")
-	private String name;
+	//命人姓名
+	@Column(name = "patient_name")
+	private String patientName;
 
 	@Column(name = "birthday")
 	private String birthday;
@@ -25,42 +32,42 @@ public class Patient {
 	@Column(name = "gender")
 	private String gender;
 
-	@Column(name = "e_mail")
-	private String eMail;
+	@Column(name = "email")
+	private String email;
 
 	public Patient() {
 
 	}
 
-	public Patient(String id, String password) {
-		this.id = id;
+	public Patient(String patientId, String password) {
+		this.patientId = patientId;
 		this.password = password;
 	}
 
-	public Patient(String id, String password, String name, String birthday, String gender, String eMail) {
-		this.id = id;
+	public Patient(String patientId, String password, String patientName, String birthday, String gender, String email) {
+		this.patientId = patientId;
 		this.password = password;
-		this.name = name;
+		this.patientName = patientName;
 		this.birthday = birthday;
 		this.gender = gender;
-		this.eMail = eMail;
+		this.email = email;
 
 	}
 
-	public Patient(String id, String password, String name, String eMail) {
-		this.id = id;
+	public Patient(String patientId, String password, String patientName, String email) {
+		this.patientId = patientId;
 		this.password = password;
-		this.name = name;
-		this.eMail = eMail;
+		this.patientName = patientName;
+		this.email = email;
 
 	}
 
-	public String getId() {
-		return id;
+	public String getPatientId() {
+		return patientId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setPatientId(String patientId) {
+		this.patientId = patientId;
 	}
 
 	public String getPassword() {
@@ -71,12 +78,12 @@ public class Patient {
 		this.password = password;
 	}
 
-	public String getName() {
-		return name;
+	public String getPatientName() {
+		return patientName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setPatientName(String patientName) {
+		this.patientName = patientName;
 	}
 
 	public String getBirthday() {
@@ -95,11 +102,11 @@ public class Patient {
 		this.gender = gender;
 	}
 
-	public String geteMail() {
-		return eMail;
+	public String getEmail() {
+		return email;
 	}
 
-	public void seteMail(String eMail) {
-		this.eMail = eMail;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }
