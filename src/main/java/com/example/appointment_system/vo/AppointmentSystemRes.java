@@ -65,7 +65,6 @@ public class AppointmentSystemRes {
 		this.message = message;
 	}
 
-	//預約系統回傳訊息
 	public AppointmentSystemRes(Appointment appointment, String message) {
 		this.appointment = appointment;
 		this.message = message;
