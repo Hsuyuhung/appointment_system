@@ -610,4 +610,15 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		appointmentDao.deleteById(autoId);
 		return new AppointmentSystemRes(AppointmentSystemRtnCode.DELETE_SUCCESSFUL.getMessage());
 	}
+
+	//依科別找醫生資訊12/15新增
+	@Override
+	public AppointmentSystemRes findByDoctorDepartment(String doctorDepartment) {
+		List<Doctor> doctorList = doctorDao.findByDoctorDepartment(doctorDepartment);
+		if(doctorList.isEmpty()) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.NOT_FIND.getMessage());
+		}
+		return new AppointmentSystemRes(doctorList, AppointmentSystemRtnCode.SEARCH_SUCCESSFUL.getMessage());
+	}
+
 }

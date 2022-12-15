@@ -67,4 +67,6 @@ public interface AppointmentSystemService {
     //刪除預約
 	public AppointmentSystemRes deleteAppointment(int autoId);
 
+	//依科別搜尋醫生
+	public AppointmentSystemRes findByDoctorDepartment(String doctorDepartment);
 }
