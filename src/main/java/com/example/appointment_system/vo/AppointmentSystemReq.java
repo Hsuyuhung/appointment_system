@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AppointmentSystemReq {
@@ -23,26 +22,26 @@ public class AppointmentSystemReq {
 
 	private String address;
 
-	@JsonProperty("doctorId")
 	private String doctorId;
 
-	@JsonProperty("doctorName")
 	private String doctorName;
 
-	@JsonProperty("doctorDepartment")
 	private String doctorDepartment;
 
-	@JsonProperty("appointmentTime")
 	private String appointmentTime;
 
 	private String week;
 
+	private String newWeek;
+
+	private String newAppointmentTime;
+
 	private String patientId;
 
-	@JsonProperty("pdw")
 	private String password;
 
-	@JsonProperty("newpdw")
+	private String confirmPassword;
+
 	private String newPassword;
 
 	private String patientName;
@@ -52,8 +51,6 @@ public class AppointmentSystemReq {
 	private String gender;
 
 	private String email;
-
-	private String medical;
 
 	private LocalDateTime createTime;
 
@@ -75,20 +72,6 @@ public class AppointmentSystemReq {
 		this.week = week;
 		this.appointmentDate = appointmentDate;
 		this.createTime = createTime;
-
-	}
-
-	public AppointmentSystemReq(String patientId, String doctorId, String appointmentTime, String week, String medical,
-			LocalDateTime createTime, String email, String birthday) {
-
-		this.patientId = patientId;
-		this.doctorId = doctorId;
-		this.appointmentTime = appointmentTime;
-		this.week = week;
-		this.medical = medical;
-		this.createTime = createTime;
-		this.email = email;
-		this.birthday = birthday;
 
 	}
 
@@ -162,14 +145,6 @@ public class AppointmentSystemReq {
 
 	public void setPatientId(String patientId) {
 		this.patientId = patientId;
-	}
-
-	public String getMedical() {
-		return medical;
-	}
-
-	public void setMedical(String medical) {
-		this.medical = medical;
 	}
 
 	public LocalDateTime getCreateTime() {
@@ -276,6 +251,22 @@ public class AppointmentSystemReq {
 		this.week = week;
 	}
 
+	public String getNewWeek() {
+		return newWeek;
+	}
+
+	public void setNewWeek(String newWeek) {
+		this.newWeek = newWeek;
+	}
+
+	public String getNewAppointmentTime() {
+		return newAppointmentTime;
+	}
+
+	public void setNewAppointmentTime(String newAppointmentTime) {
+		this.newAppointmentTime = newAppointmentTime;
+	}
+
 	public String getNewPassword() {
 		return newPassword;
 	}
@@ -290,6 +281,14 @@ public class AppointmentSystemReq {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
 	}
 
 	public String getBirthday() {
