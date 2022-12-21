@@ -28,23 +28,23 @@ public interface AppointmentSystemService {
 //	刪除醫院資訊
 	public AppointmentSystemRes deleteHospitalInfo(String hospitalId);
 
-//	創建醫院科別
+//	刪除醫院科別
 	public AppointmentSystemRes deleteHospitalDepartment(String hospitalId, String department);
 
 	// doctor1 : 創建醫生資訊
 	public AppointmentSystemRes createDoctorInfo(String hospitalId, String doctorId, String doctorName,
 			String doctorDepartment, String appointmentTime, String week);
 
-	// doctor2 : 更新醫生資訊(科別、看診時間跟星期不可改動)
-	public AppointmentSystemRes updateDoctorInfo(String doctorId, String doctorName, String doctorDepartment,
-			String hospitalId);
+	// doctor2 : 更新醫生資訊(看診時間跟星期)
+	public AppointmentSystemRes updateDoctorInfo(String doctorId, String hospitalId, String appointmentTime,
+			String week, String newAppointmentTime, String newWeek);
 
 	// doctor3 : 刪除醫生資訊
-	public AppointmentSystemRes deleteDoctorInfo(String doctorId);
+	public AppointmentSystemRes deleteDoctorInfo(String doctorId, String hospitalId);
 
 	// 建立病患資訊
-	public AppointmentSystemRes createPatientInfo(String patientId, String password, String patientName,
-			String birthday, String gender, String email);
+	public AppointmentSystemRes createPatientInfo(String patientId, String password, String confirmPassword,
+			String patientName, String birthday, String gender, String email);
 
 	// 更改病患資訊---> ID .password 判別.name eMail更改
 	public AppointmentSystemRes updatePatientInfo(String patientId, String password, String patientName, String email);
@@ -59,14 +59,18 @@ public interface AppointmentSystemService {
 	public AppointmentSystemRes searchById(String patientId, String password);
 
 	// 建立預約系統 12/14更新
-	public AppointmentSystemRes creatAppointmentSystem(String patientId, String doctorId, String appointmentTime,String week ,LocalDate appointmentDate );
+	public AppointmentSystemRes creatAppointmentSystem(String patientId, String doctorId, String hospitalName,
+			String appointmentTime, String week, LocalDate appointmentDate);
 
-    //搜尋預約
+	// 搜尋預約
 	public AppointmentSystemRes findAppointment(String patientId);
 
-    //刪除預約
+	// 刪除預約
 	public AppointmentSystemRes deleteAppointment(int autoId);
 
-	//依科別搜尋醫生
+	// 依科別搜尋醫生
 	public AppointmentSystemRes findByDoctorDepartment(String doctorDepartment);
+
+	// 登入
+	public AppointmentSystemRes login(String patientId, String password);
 }
