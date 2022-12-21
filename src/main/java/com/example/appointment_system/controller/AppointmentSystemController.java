@@ -1,17 +1,22 @@
 package com.example.appointment_system.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.appointment_system.constants.AppointmentSystemRtnCode;
 import com.example.appointment_system.entity.Hospital;
+import com.example.appointment_system.entity.Patient;
 import com.example.appointment_system.ifs.AppointmentSystemService;
 import com.example.appointment_system.vo.AppointmentSystemRes;
 import com.example.appointment_system.vo.AppointmentSystemReq;
 
+@CrossOrigin
 @RestController
 public class AppointmentSystemController {
 
@@ -63,7 +68,7 @@ public class AppointmentSystemController {
 		if (hospital == null) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITAL_ID_EXSITED.getMessage());
 		}
-		return new AppointmentSystemRes(AppointmentSystemRtnCode.CREATE_SUCCESSFUL.getMessage(), hospital);
+		return new AppointmentSystemRes(hospital);
 	}
 
 //	更新醫院資訊
@@ -206,13 +211,27 @@ public class AppointmentSystemController {
 	// 更新醫生資訊
 	@PostMapping(value = "/api/updateDoctorInfo")
 	public AppointmentSystemRes updateDoctorInfo(@RequestBody AppointmentSystemReq req) {
-		AppointmentSystemRes doctor = appointmentSystemService.updateDoctorInfo(req.getDoctorId(), req.getDoctorName(),
-				req.getDoctorDepartment(), req.getHospitalId());
+		AppointmentSystemRes doctor = appointmentSystemService.updateDoctorInfo(req.getDoctorId(), req.getHospitalId(),
+				req.getAppointmentTime(), req.getWeek(), req.getNewAppointmentTime(), req.getNewWeek());
 		if (doctor == null) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORID_REQUIRED.getMessage());
 		}
-		if (!StringUtils.hasText(req.getDoctorName()) && !StringUtils.hasText(req.getDoctorDepartment())
-				&& !StringUtils.hasText(req.getHospitalId())) {
+		if (!StringUtils.hasText(req.getHospitalId())) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITALID_REQUIRED.getMessage());
+		} else if (!StringUtils.hasText(req.getDoctorId())) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORID_REQUIRED.getMessage());
+		}  else if (!StringUtils.hasText(req.getAppointmentTime())) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORAPPOINTMENTTIME_REQUIRED.getMessage());
+		} else if (!StringUtils.hasText(req.getWeek())) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.WEEK_REQUIRED.getMessage());
+		} else if (!StringUtils.hasText(req.getNewAppointmentTime())) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORAPPOINTMENTTIME_REQUIRED.getMessage());
+		} else if (!StringUtils.hasText(req.getNewWeek())) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.WEEK_REQUIRED.getMessage());
+		}else if (!req.getDoctorId().matches("[A-Z]\\d{6}")) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTOR_ID_EXISTED.getMessage());
+		} else if (!StringUtils.hasText(req.getDoctorId()) && !StringUtils.hasText(req.getHospitalId())
+				&& !StringUtils.hasText(req.getAppointmentTime()) && !StringUtils.hasText(req.getWeek())) {
 			return new AppointmentSystemRes(
 					AppointmentSystemRtnCode.DOCTORNAME_DOCTORDEPARTMENT_HOSPITALID_REQUIRED.getMessage());
 		}
@@ -220,22 +239,34 @@ public class AppointmentSystemController {
 
 	}
 
+	// 依科別搜尋醫生
+	@PostMapping(value = "/api/findByDoctorDepartment")
+	public AppointmentSystemRes findByDoctorDepartment(@RequestBody AppointmentSystemReq req) {
+		if (!StringUtils.hasText(req.getDoctorDepartment())) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORDEPARTMENT_REQUIRED.getMessage());
+		}
+		return appointmentSystemService.findByDoctorDepartment(req.getDoctorDepartment());
+	}
+
 	// 刪除醫生資訊
 	@PostMapping(value = "/api/deleteDoctorInfo")
 	public AppointmentSystemRes deleteDoctorInfo(@RequestBody AppointmentSystemReq req) {
 		if (!req.getDoctorId().matches("[A-Z]\\d{6}")) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTOR_ID_EXISTED.getMessage());
-		} else if (!StringUtils.hasText(req.getDoctorId())) {
+		}
+		if (!req.getHospitalId().matches("[A-Z]\\d{3}")) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITAL_ID_WRONG.getMessage());
+		} else if (!StringUtils.hasText(req.getDoctorId()) && !StringUtils.hasText(req.getHospitalId())) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORID_REQUIRED.getMessage());
 		}
-		return appointmentSystemService.deleteDoctorInfo(req.getDoctorId());
+		return appointmentSystemService.deleteDoctorInfo(req.getDoctorId(), req.getHospitalId());
 	}
 
 	// 建立病患資訊
 	@PostMapping(value = "/api/createPatientInfo")
 	public AppointmentSystemRes createPatientInfo(@RequestBody AppointmentSystemReq req) {
-		return appointmentSystemService.createPatientInfo(req.getPatientId(), req.getPassword(), req.getPatientName(),
-				req.getBirthday(), req.getGender(), req.getEmail());
+		return appointmentSystemService.createPatientInfo(req.getPatientId(), req.getPassword(),
+				req.getConfirmPassword(), req.getPatientName(), req.getBirthday(), req.getGender(), req.getEmail());
 	}
 
 	// 更改病患資訊---> ID .password 判別.name eMail更改
@@ -269,7 +300,7 @@ public class AppointmentSystemController {
 	public AppointmentSystemRes creatAppointment(@RequestBody AppointmentSystemReq req) {
 
 		return appointmentSystemService.creatAppointmentSystem(req.getPatientId(), req.getDoctorId(),
-				req.getAppointmentTime(), req.getWeek(), req.getAppointmentDate());
+				req.getHospitalName(), req.getAppointmentTime(), req.getWeek(), req.getAppointmentDate());
 	}
 
 //	搜尋預約
@@ -284,7 +315,7 @@ public class AppointmentSystemController {
 	}
 
 //	刪除預約
-	@PostMapping(value = "/api/delete_Appointment")
+	@PostMapping(value = "/api/delete_appointment")
 	public AppointmentSystemRes deleteAppointment(@RequestBody AppointmentSystemReq req) {
 
 		if (req.getChartNo() == 0) {
@@ -293,13 +324,20 @@ public class AppointmentSystemController {
 
 		return appointmentSystemService.deleteAppointment(req.getChartNo());
 	}
-	
-	//依科別搜尋醫生
-	@PostMapping(value = "/api/findByDoctorDepartment")
-	public AppointmentSystemRes findByDoctorDepartment(@RequestBody AppointmentSystemReq req) {
-		if (!StringUtils.hasText(req.getDoctorDepartment())) {
-			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORDEPARTMENT_REQUIRED.getMessage());
+
+	// 登入
+	@PostMapping(value = "/api/login")
+	public AppointmentSystemRes login(@RequestBody AppointmentSystemReq req, HttpSession httpSession) {
+
+		if (!StringUtils.hasText(req.getPatientId())) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.ID_NULL.getMessage());
 		}
-		return appointmentSystemService.findByDoctorDepartment(req.getDoctorDepartment());
+
+		if (!StringUtils.hasText(req.getPassword())) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.PASSWORD_NULL.getMessage());
+		}
+		Patient patient = new Patient(req.getPatientId(), req.getPassword());
+		httpSession.setAttribute("patientInfo", patient);
+		return appointmentSystemService.login(req.getPatientId(), req.getPassword());
 	}
 }
