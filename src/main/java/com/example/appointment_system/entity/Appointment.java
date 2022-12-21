@@ -52,12 +52,12 @@ public class Appointment {
 
 	}
 
-	public Appointment(String patientId,String doctorId, String week, String appointmentTime,
+	public Appointment(String patientId,String doctorId, String appointmentTime, String week, 
 			LocalDate appointmentDate, LocalDateTime createTime) {
 		this.patientId = patientId;
 		this.doctorId = doctorId;
-		this.week = week;
 		this.appointmentTime = appointmentTime;
+		this.week = week;
 		this.appointmentDate = appointmentDate;
 		this.createTime = createTime;
 	}
@@ -72,6 +72,19 @@ public class Appointment {
 		this.createTime = createTime;
 
 	}
+	
+	// 12/16新增!
+		public Appointment(String patientId, String doctorId, String hospitalName, String appointmentTime, String week,
+				LocalDate appointmentDate, LocalDateTime createTime) {
+			this.patientId = patientId;
+			this.doctorId = doctorId;
+			this.hospitalName = hospitalName;
+			this.appointmentTime = appointmentTime;
+			this.week = week;
+			this.appointmentDate = appointmentDate;
+			this.createTime = createTime;
+		}
+
 
 	// 12/14新增的建構方法
 	public Appointment(String patientId, String doctorId, String appointmentTime, String week) {
