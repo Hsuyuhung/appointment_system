@@ -12,10 +12,16 @@ import com.example.appointment_system.entity.Doctor;
 public interface DoctorDao extends JpaRepository<Doctor, String> {
 
 	public List<Doctor> findByDoctorId(String doctorId);
+	
+	public List<Doctor> findByDoctorIdAndHospitalId(String doctorId, String hospitalId);
 
-	public Optional<Doctor> findByDoctorIdAndAppointmentTimeAndWeek(String doctorId, String appointmentTime, String week);
+	public Optional<Doctor> findByDoctorIdAndHospitalIdAndAppointmentTimeAndWeek(String doctorId, String hospitalId, String appointmentTime, String week);
 	
 	public List<Doctor> findAllBydoctorIdIn(List<String> doctorIdList);
 	
 	public List<Doctor> findByDoctorDepartment(String doctorDepartment);
+	
+	
+	
+	public Optional<Doctor> findByDoctorIdAndAppointmentTimeAndWeek(String doctorId, String appointmentTime, String week);
 }
