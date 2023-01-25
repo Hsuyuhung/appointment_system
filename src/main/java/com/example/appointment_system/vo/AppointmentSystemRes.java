@@ -37,8 +37,7 @@ public class AppointmentSystemRes {
 
 	}
 
-	public AppointmentSystemRes(String message, Hospital hospital) {
-		this.message = message;
+	public AppointmentSystemRes(Hospital hospital) {
 		this.hospital = hospital;
 	}
 
@@ -46,12 +45,20 @@ public class AppointmentSystemRes {
 		this.hospitalList = hospitalList;
 	}
 
-	public AppointmentSystemRes(Doctor doctor, String message) {
-		this.doctor = doctor;
+	public AppointmentSystemRes(String message, Doctor doctor) {
 		this.message = message;
+		this.doctor = doctor;
 	}
 
 	public AppointmentSystemRes(Patient patient, List<AppoinmentInfo> appointmentInfoList) {
+		this.patient = patient;
+		this.appointmentInfoList = appointmentInfoList;
+	}
+	
+
+	public AppointmentSystemRes(String message, Patient patient, List<AppoinmentInfo> appointmentInfoList) {
+		super();
+		this.message = message;
 		this.patient = patient;
 		this.appointmentInfoList = appointmentInfoList;
 	}
@@ -64,12 +71,16 @@ public class AppointmentSystemRes {
 		this.patient = patient;
 		this.message = message;
 	}
+	
+	public AppointmentSystemRes(Patient patient) {
+		this.patient = patient;
+	}
 
 	public AppointmentSystemRes(Appointment appointment, String message) {
 		this.appointment = appointment;
 		this.message = message;
 	}
-	
+
 	public AppointmentSystemRes(List<Doctor> doctorList, String message) {
 		this.doctorList = doctorList;
 		this.message = message;

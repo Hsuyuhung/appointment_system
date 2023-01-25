@@ -2,7 +2,6 @@ package com.example.appointment_system.respository;
 
 import java.util.List;
 
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -23,5 +22,7 @@ public interface HospitalDao extends JpaRepository<Hospital, HospitalId> {
 	public List<Hospital> deleteByHospitalId(String hospitalId);
 
 	public Hospital findByHospitalIdAndDepartment(String hospitalId, String department);
+	
+	public List<Hospital> findByHospitalName(String hospitalName);
 
 }

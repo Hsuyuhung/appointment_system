@@ -1,14 +1,14 @@
 package com.example.appointment_system.impl;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -41,6 +41,9 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 	@Autowired
 	private PatientDao patientDao;
 
+	@Autowired
+	private JavaMailSender emailSender;
+
 //	新增醫院資訊
 	@Override
 	public Hospital createHospitalInfo(String hospitalId, String department, String hospitalName, String phone,
@@ -66,8 +69,8 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 
 		List<Hospital> hospitalList = hospitalDao.findByHospitalId(hospitalId);
 
-		if (hospitalList == null) {
-			return new AppointmentSystemRes(AppointmentSystemRtnCode.NOT_FIND.getMessage());
+		if (hospitalList.isEmpty()) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITAL_ID_NONEXIST.getMessage());
 		}
 
 		for (Hospital item : hospitalList) {
@@ -94,7 +97,6 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		}
 
 		hospitalDao.saveAll(hospitalList);
-		appointmentSystemRes.setMessage(AppointmentSystemRtnCode.UPDATE_SUCCESSFUL.getMessage());
 		appointmentSystemRes.setHospitalList(hospitalList);
 		return appointmentSystemRes;
 	}
@@ -192,44 +194,45 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 
 	// 更新醫生資訊
 	@Override
-	public AppointmentSystemRes updateDoctorInfo(String doctorId, String doctorName, String doctorDepartment,
-			String hospitalId) {
-		AppointmentSystemRes appointmentSystemRes = new AppointmentSystemRes();
-		List<Doctor> doctorList = doctorDao.findByDoctorId(doctorId);
+	public AppointmentSystemRes updateDoctorInfo(String doctorId, String hospitalId, String appointmentTime,
+			String week, String newAppointmentTime, String newWeek) {
+		Optional<Doctor> doctor = doctorDao.findByDoctorIdAndHospitalIdAndAppointmentTimeAndWeek(doctorId, hospitalId,
+				appointmentTime, week);
 
-		if (doctorList == null) {
-			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORID_INEXISTED.getMessage());
+		if (!doctor.isPresent()) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.NOT_FIND.getMessage());
 		}
 
-		String department = doctorDepartment;
-		HospitalId hospitalIdd = new HospitalId(hospitalId, department);
-		Optional<Hospital> hospitalIdOp = hospitalDao.findById(hospitalIdd);
-		if (hospitalIdOp.isEmpty()) {
-			return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITALID_DEPARTMENT_INEXISTED.getMessage());
+		Optional<Doctor> doctorOp = doctorDao.findByDoctorIdAndAppointmentTimeAndWeek(doctorId, newAppointmentTime,
+				newWeek);
+		if (doctorOp.isPresent()) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORAPPOINTMENTTIME_WEEK_EXISTED.getMessage());
 		}
-
-		for (Doctor item : doctorList) {
-			if (StringUtils.hasText(doctorName)) {
-				item.setDoctorName(doctorName);
-			}
-			if (StringUtils.hasText(doctorDepartment)) {
-				item.setDoctorDepartment(doctorDepartment);
-			}
-			if (StringUtils.hasText(hospitalId)) {
-				item.setHospitalId(hospitalId);
-			}
+		Doctor doctorInfo = doctor.get();
+		if (StringUtils.hasText(newAppointmentTime)) {
+			doctorInfo.setAppointmentTime(newAppointmentTime);
 		}
+		if (StringUtils.hasText(newWeek)) {
+			doctorInfo.setWeek(newWeek);
+		}
+		doctorDao.save(doctorInfo);
+		return new AppointmentSystemRes(AppointmentSystemRtnCode.UPDATE_SUCCESSFUL.getMessage(), doctorInfo);
+	}
 
-		doctorDao.saveAll(doctorList);
-		appointmentSystemRes.setMessage(AppointmentSystemRtnCode.UPDATE_SUCCESSFUL.getMessage());
-		appointmentSystemRes.setDoctorList(doctorList);
-		return appointmentSystemRes;
+	// 依科別找醫生資訊
+	@Override
+	public AppointmentSystemRes findByDoctorDepartment(String doctorDepartment) {
+		List<Doctor> doctorList = doctorDao.findByDoctorDepartment(doctorDepartment);
+		if (doctorList.isEmpty()) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.NOT_FIND.getMessage());
+		}
+		return new AppointmentSystemRes(doctorList, null);
 	}
 
 	// 刪除醫生資訊
 	@Override
-	public AppointmentSystemRes deleteDoctorInfo(String doctorId) {
-		List<Doctor> doctorList = doctorDao.findByDoctorId(doctorId);
+	public AppointmentSystemRes deleteDoctorInfo(String doctorId, String hospitalId) {
+		List<Doctor> doctorList = doctorDao.findByDoctorIdAndHospitalId(doctorId, hospitalId);
 		if (doctorList == null) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORID_INEXISTED.getMessage());
 		}
@@ -241,8 +244,8 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 
 	// 建立病患資料
 	@Override
-	public AppointmentSystemRes createPatientInfo(String patientId, String password, String patientName,
-			String birthday, String gender, String email) {
+	public AppointmentSystemRes createPatientInfo(String patientId, String password, String confirmPassword,
+			String patientName, String birthday, String gender, String email) {
 
 		AppointmentSystemRes checkCreateParams = checkCreateParams(patientId, password, patientName, birthday, gender,
 				email);
@@ -257,10 +260,14 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.ID_EXIST.getMessage());
 		}
 
+		if (!password.equals(confirmPassword)) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.PASSWORD_CONFIRM.getMessage());
+		}
+
 		Patient patient = new Patient(patientId, password, patientName, birthday, gender, email);
 		patientDao.save(patient);
 
-		return new AppointmentSystemRes(patient, AppointmentSystemRtnCode.SUCCESSFUL.getMessage());
+		return new AppointmentSystemRes(patient);
 	}
 
 	// 更改病患資訊---> ID .password 判別.name eMail更改
@@ -289,7 +296,8 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		patient.setEmail(email);
 		patient.setPatientName(patientName);
 		patientDao.save(patient);
-		return new AppointmentSystemRes(patient, AppointmentSystemRtnCode.UPDATE_SUCCESSFUL.getMessage());
+		// 更新回傳資訊12/19
+		return new AppointmentSystemRes(patient);
 	}
 
 	// 更改病患資訊---> ID . password判別 --> password 更改
@@ -326,7 +334,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		patient.setPassword(newPassword);
 		patientDao.save(patient);
 
-		return new AppointmentSystemRes(patient, AppointmentSystemRtnCode.UPDATE_SUCCESSFUL.getMessage());
+		return new AppointmentSystemRes(patient);
 
 	}
 
@@ -350,14 +358,14 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 		Patient patient = patientOp.get();
 		String patientDB = patient.getPassword();
 
-		if (patientDB.equalsIgnoreCase(password)) {
+		if (!patientDB.equalsIgnoreCase(password)) {
 
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.PASSWORD_ERROR.getMessage());
 		}
 
 		patientDao.deleteById(patientId);
 
-		return new AppointmentSystemRes(AppointmentSystemRtnCode.DELETE_SUCCESSFUL.getMessage());
+		return new AppointmentSystemRes(patient);
 
 	}
 
@@ -384,53 +392,88 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.PASSWORD_ERROR.getMessage());
 		}
 
-		return new AppointmentSystemRes(patient, AppointmentSystemRtnCode.DELETE_SUCCESSFUL.getMessage());
+		return new AppointmentSystemRes(patient);
 
 	}
 
-	// 建立預約系統12/14 更新
+	// 建立預約系統12/16 更新
 	@Override
-	public AppointmentSystemRes creatAppointmentSystem(String patientId, String doctorId, String appointmentTime,
-			String week, LocalDate appointmentDate) {
+	public AppointmentSystemRes creatAppointmentSystem(String patientId, String doctorId, String hospitalName,
+			String appointmentTime, String week, LocalDate appointmentDate) {
 
 		// 在資料庫中取得病人的資訊
 		Optional<Patient> patientOp = patientDao.findById(patientId);
-
 		// 如果沒有病患資訊則返回無此病人
 		if (!patientOp.isPresent()) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.ID_EMPTY.getMessage());
 		}
+		// 在資料庫中取醫院的資訊
+		List<Hospital> hospitalList = hospitalDao.findByHospitalName(hospitalName);
 
+		for (Hospital i : hospitalList) {
+			String checkhospital = i.getHospitalName();
+
+			if (!checkhospital.equalsIgnoreCase(hospitalName)) {
+				return new AppointmentSystemRes(AppointmentSystemRtnCode.HOSPITALID_DEPARTMENT_INEXISTED.getMessage());
+			}
+		}
+		// 如果沒有病患資訊則返回無此病人
+		List<Doctor> checkDoctorList = doctorDao.findByDoctorId(doctorId);
+		for (Doctor j : checkDoctorList) {
+			String checkweek = j.getWeek();
+			String checkTime = j.getAppointmentTime();
+			if (checkTime.equalsIgnoreCase(appointmentTime)) {
+				if (!checkweek.equalsIgnoreCase(week)) {
+					return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORID_INEXISTED.getMessage());
+				}
+			}
+		}
 		// 在資料庫搜尋有沒有醫生的資訊 ，並且取出醫生的資訊(判斷方式用醫生的ID 搭配 診別 + 星期)
-		Optional<Doctor> checkDoctor = doctorDao.findByDoctorIdAndAppointmentTimeAndWeek(doctorId, appointmentTime,
-				week);
+//		Optional<Doctor> checkDoctor = doctorDao.findByDoctorIdAndAppointmentTimeAndWeek(doctorId, appointmentTime,
+//				week);
+//
+//		// 如果這個醫生再輸入的星期跟輸入的診別沒有上班，那回傳清單為null則返回且回傳訊息沒有此醫生
+//		if (!checkDoctor.isPresent()) {
+//			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORID_INEXISTED.getMessage());
+//		}
 
-		// 如果這個醫生再輸入的星期跟輸入的診別沒有上班，那回傳清單為null則返回且回傳訊息沒有此醫生
-		if (checkDoctor.isEmpty()) {
-			return new AppointmentSystemRes(AppointmentSystemRtnCode.DOCTORID_INEXISTED.getMessage());
+		// 12/19更新 把week改成int跟輸入的date取得的星期做比較 如果 不一樣 則跳處錯誤訊息
+		int i = Integer.valueOf(week);
+		if (appointmentDate.getDayOfWeek().getValue() != i) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.CHECK_WEEK.getMessage());
 		}
 
-		// 用list接出符合資格的預約內容
-		List<Appointment> appointmentTimeList = appointmentDao.findByDoctorIdAndAppointmentTimeAndWeek(doctorId,
-				appointmentTime, week);
+		List<Appointment> appointmentTimeList = appointmentDao
+				.findByDoctorIdAndAppointmentTimeAndAppointmentDate(doctorId, appointmentTime, appointmentDate);
 
+		for (Appointment item : appointmentTimeList) {
+			String checkID = item.getPatientId();
+
+			if (checkID.equals(patientId)) {
+
+				return new AppointmentSystemRes(AppointmentSystemRtnCode.CREATE_DOUBLE_APPOINMENT_NULL.getMessage());
+			}
+		}
 		// size 計算多少人數在個診間
 		int size = appointmentTimeList.size();
-
 		// 如果大於30人就顯示額滿
 		if (size > 3) {
-
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.CREATE_APPOINMENT_NULL.getMessage());
-
 			// 沒有的話則建立預約
 		} else {
-//			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 			LocalDateTime createTime = LocalDateTime.now();
-//			String createTime = formatter.format(LocalDateTime.now());
-			Appointment Appointment = new Appointment(patientId, doctorId, appointmentTime, week, appointmentDate,
-					createTime);
+			Appointment Appointment = new Appointment(patientId, doctorId, hospitalName, appointmentTime, week,
+					appointmentDate, createTime);
 			appointmentDao.save(Appointment);
-			return new AppointmentSystemRes(Appointment, AppointmentSystemRtnCode.CREATE_SUCCESSFUL.getMessage());
+			SimpleMailMessage message = new SimpleMailMessage();
+			message.setTo(patientOp.get().getEmail());
+			message.setSubject("預約成功");
+			message.setText("預約成功，您的預約資訊如下：\n 帳號:" + Appointment.getPatientId().toString() + "\n醫生ID:"
+					+ Appointment.getDoctorId().toString() + "\n預約看診日期:" + Appointment.getAppointmentDate().toString()
+					+ "\n診別:" + Appointment.getAppointmentTime().toString() + "\n星期:" + Appointment.getWeek().toString()
+					+ "\n預約時間:" + Appointment.getCreateTime().toString());
+			emailSender.send(message);
+			return new AppointmentSystemRes(Appointment, null);
 		}
 	}
 
@@ -474,9 +517,7 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 
 		// ------------------------判別性別格式是否正確-----------------------------//
 
-		String genderPattern = "[mfMF]";
-
-		if (!gender.matches(genderPattern)) {
+		if (!gender.matches("(男|女){1}")) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.GENDER_FAIL.getMessage());
 		}
 
@@ -558,21 +599,22 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 
 	}
 
-//	搜尋預約
+	// 搜尋預約
 	@Override
 	public AppointmentSystemRes findAppointment(String patientId) {
 		List<Appointment> appointmentList = appointmentDao.findAllByPatientId(patientId);
-
+		
+		System.out.println(appointmentList.size());
 		if (appointmentList.isEmpty()) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.ID_EMPTY.getMessage());
 		}
 
-		List<String> doctorIdList = new ArrayList<>();
-
-		appointmentList.forEach((e) -> {
-			doctorIdList.add(e.getDoctorId());
-		});
-		List<Doctor> doctorList = doctorDao.findAllBydoctorIdIn(doctorIdList);
+//		List<String> doctorIdList = new ArrayList<>();
+//
+//		appointmentList.forEach((e) -> {
+//			doctorIdList.add(e.getDoctorId());
+//		});
+		List<Doctor> doctorList = doctorDao.findAll();
 
 		for (Doctor item : doctorList) {
 			item.setAutoId(null);
@@ -583,42 +625,103 @@ public class AppointmentSystemServiceImpl implements AppointmentSystemService {
 
 		List<AppoinmentInfo> appoinmentInfoList = new ArrayList<>();
 		for (int i = 0; i < appointmentList.size(); i++) {
-			AppoinmentInfo appoinmentInfo = new AppoinmentInfo(appointmentList.get(i).getAutoId(),
-					appointmentList.get(i).getHospitalName(), doctorList.get(i),
-					appointmentList.get(i).getAppointmentDate(), appointmentList.get(i).getWeek(),
-					appointmentList.get(i).getAppointmentTime(), appointmentList.get(i).getCreateTime());
-			appoinmentInfoList.add(appoinmentInfo);
+			Doctor doctor = new Doctor();
+			for(Doctor item: doctorList) {
+				if(item.getDoctorId().equals(appointmentList.get(i).getDoctorId())) {
+					doctor = item;
+				
+				AppoinmentInfo appoinmentInfo = new AppoinmentInfo(appointmentList.get(i).getAutoId(),
+						appointmentList.get(i).getHospitalName(), doctor,
+						appointmentList.get(i).getAppointmentDate(), appointmentList.get(i).getWeek(),
+						appointmentList.get(i).getAppointmentTime(), appointmentList.get(i).getCreateTime());
+				appoinmentInfoList.add(appoinmentInfo);
+				break;
+				}
+			}
+//			AppoinmentInfo appoinmentInfo = new AppoinmentInfo(appointmentList.get(i).getAutoId(),
+//					appointmentList.get(i).getHospitalName(), doctor,
+//					appointmentList.get(i).getAppointmentDate(), appointmentList.get(i).getWeek(),
+//					appointmentList.get(i).getAppointmentTime(), appointmentList.get(i).getCreateTime());
+//			appoinmentInfoList.add(appoinmentInfo);
 		}
+		System.out.println(appoinmentInfoList.size());
+		Optional<Patient> patient = patientDao.findById(patientId);
+		if (patient != null && patient.isPresent()) {
+			Patient patientInfo = patient.get();
+			patientInfo.setPatientId(null);
+			patientInfo.setPassword(null);
+			return new AppointmentSystemRes(null, patientInfo, appoinmentInfoList);
+		}
+		return new AppointmentSystemRes(AppointmentSystemRtnCode.ID_EMPTY.getMessage());
 
-		Patient patient = patientDao.findById(patientId).get();
-		patient.setPatientId(null);
-		patient.setPassword(null);
-
-		return new AppointmentSystemRes(patient, appoinmentInfoList);
 	}
 
-//	刪除預約
+	// 刪除預約
 	@Override
 	public AppointmentSystemRes deleteAppointment(int autoId) {
 
-		Optional<Appointment> appointmentList = appointmentDao.findById(autoId);
+		Optional<Appointment> deleteAppointmentList = appointmentDao.findById(autoId);
 
-		if (!appointmentList.isPresent()) {
+		if (!deleteAppointmentList.isPresent()) {
 			return new AppointmentSystemRes(AppointmentSystemRtnCode.NOT_FIND.getMessage());
 		}
 
 		appointmentDao.deleteById(autoId);
 		return new AppointmentSystemRes(AppointmentSystemRtnCode.DELETE_SUCCESSFUL.getMessage());
+		
+//		List<Appointment> appointmentList = appointmentDao.findAllByPatientId(patientId);
+//
+//		if (appointmentList.isEmpty()) {
+//			return new AppointmentSystemRes(AppointmentSystemRtnCode.ID_EMPTY.getMessage());
+//		}
+//
+//		List<String> doctorIdList = new ArrayList<>();
+//
+//		appointmentList.forEach((e) -> {
+//			doctorIdList.add(e.getDoctorId());
+//		});
+//		List<Doctor> doctorList = doctorDao.findAllBydoctorIdIn(doctorIdList);
+//
+//		for (Doctor item : doctorList) {
+//			item.setAutoId(null);
+//			item.setHospitalId(null);
+//			item.setAppointmentTime(null);
+//			item.setWeek(null);
+//		}
+//
+//		List<AppoinmentInfo> appoinmentInfoList = new ArrayList<>();
+//		for (int i = 0; i < appointmentList.size()-1; i++) {
+//			AppoinmentInfo appoinmentInfo = new AppoinmentInfo(appointmentList.get(i).getAutoId(),
+//					appointmentList.get(i).getHospitalName(), doctorList.get(i),
+//					appointmentList.get(i).getAppointmentDate(), appointmentList.get(i).getWeek(),
+//					appointmentList.get(i).getAppointmentTime(), appointmentList.get(i).getCreateTime());
+//			appoinmentInfoList.add(appoinmentInfo);
+//		}
+//
+//		Optional<Patient> patient = patientDao.findById(patientId);
+//		if (patient != null && patient.isPresent()) {
+//			Patient patientInfo = patient.get();
+//			patientInfo.setPatientId(null);
+//			patientInfo.setPassword(null);
+//			return new AppointmentSystemRes(null, patientInfo, appoinmentInfoList);
+//		}
+//		return new AppointmentSystemRes(AppointmentSystemRtnCode.ID_EMPTY.getMessage());
 	}
 
-	//依科別找醫生資訊12/15新增
+	// 登入
 	@Override
-	public AppointmentSystemRes findByDoctorDepartment(String doctorDepartment) {
-		List<Doctor> doctorList = doctorDao.findByDoctorDepartment(doctorDepartment);
-		if(doctorList.isEmpty()) {
-			return new AppointmentSystemRes(AppointmentSystemRtnCode.NOT_FIND.getMessage());
+	public AppointmentSystemRes login(String patientId, String password) {
+		Optional<Patient> patient = patientDao.findById(patientId);
+
+		if (patientId.equals("A111111111") && password.equals("1234567")) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.ADMINISTRATOR_LOGIN_SUCCESSFUL.getMessage());
 		}
-		return new AppointmentSystemRes(doctorList, AppointmentSystemRtnCode.SEARCH_SUCCESSFUL.getMessage());
+
+		if (patient.isPresent()) {
+			return new AppointmentSystemRes(AppointmentSystemRtnCode.USER_LOGIN_SUCCESSFUL.getMessage());
+		}
+
+		return new AppointmentSystemRes(AppointmentSystemRtnCode.ACCOUNT_OR_PASSWORD_WRONG.getMessage());
 	}
 
 }
